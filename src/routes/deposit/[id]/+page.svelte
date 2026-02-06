@@ -5,12 +5,19 @@
 </script>
 
 {#if data.deposit}
-    <h1 class="font-bold text-3xl">
-        <a href={`/student/${data.deposit.student.id}`} class="text-blue-700"
-            >{data.deposit.student.name}</a
-        >
-        (${data.deposit.cents / 100})
-    </h1>
+    <div class="flex flex-row w-full items-center">
+        <h1 class="font-bold text-3xl">
+            <a
+                href={`/student/${data.deposit.student.id}`}
+                class="text-blue-700">{data.deposit.student.name}</a
+            >
+            (${data.deposit.cents / 100})
+        </h1>
+
+        <form method="POST" action="?/delete" class="ml-auto">
+            <button>Delete</button>
+        </form>
+    </div>
     <hr />
     <span>Deposited on {data.deposit.date.toLocaleDateString("en-US")}</span>
 {:else}

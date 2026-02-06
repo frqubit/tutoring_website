@@ -5,9 +5,15 @@
 </script>
 
 {#if data.student}
-    <h1 class="font-bold text-3xl">
-        {data.student.name} ({data.student.active ? "active" : "inactive"})
-    </h1>
+    <div class="flex flex-row w-full items-center">
+        <h1 class="font-bold text-3xl">
+            {data.student.name} ({data.student.active ? "active" : "inactive"})
+        </h1>
+
+        <form method="POST" action="?/delete" class="ml-auto">
+            <button>Delete</button>
+        </form>
+    </div>
     <hr />
 {:else}
     <h1>Deposit does not exist</h1>
