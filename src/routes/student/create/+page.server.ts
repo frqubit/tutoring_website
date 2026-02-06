@@ -8,13 +8,12 @@ export const actions: Actions = {
 
     const data = await request.formData();
     const name = data.get("name") as string;
-    const active = data.get("active") == "true";
+    const active = data.get("active") == "on";
 
     if (name == null) {
       return;
     }
 
     const response = await studentFetcher.create(name, active);
-    console.log(response);
   },
 };
