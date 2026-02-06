@@ -1,0 +1,18 @@
+[environment]
+version = "0.3.0"
+
+[repository]
+name = "frqubit.tutoring.website"
+version = "0.1.0"
+
+[scripts]
+dev = "concurrently 'batl frqubit.tutoring.backend:dev_start' 'pnpm dev'"
+
+[dependencies]
+"frqubit.tutoring.backend" = "0.1.0"
+
+[links]
+"frqubit.tutoring.backend/src/modules" = "src/lib/backend/modules"
+
+[restrict.Unix]
+include = "require"

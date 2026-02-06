@@ -1,0 +1,25 @@
+<script lang="ts">
+    import type { PageProps } from "./$types";
+
+    let { data }: PageProps = $props();
+</script>
+
+<form method="POST" class="flex flex-col">
+    <label>
+        Student
+        <select name="student_id">
+            {#each data.students as student}
+                <option value={student.id}>{student.name}</option>
+            {/each}
+        </select>
+    </label>
+    <label>
+        Date
+        <input name="date" type="date" />
+    </label>
+    <label>
+        Minutes
+        <input name="minutes" type="text" />
+    </label>
+    <button>Add</button>
+</form>
