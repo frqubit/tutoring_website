@@ -6,8 +6,14 @@ import { redirect } from "@sveltejs/kit";
 export const load: PageServerLoad = async ({ fetch, params }) => {
   const studentFetcher = new StudentFetcher(BACKEND_DOMAIN, fetch);
   const student = await studentFetcher.findOne(+params.id);
+  const deposits = student
+    ? await studentFetcher.findAllDepositsOf(+params.id)
+    : null;
+  const sessions = deposits
+    ? await studentFetcher.findAllSessionsOf(+params.id)
+    : null;
 
-  return { student };
+  return { student, deposits, sessions };
 };
 
 export const actions: Actions = {
