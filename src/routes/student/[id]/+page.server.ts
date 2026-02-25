@@ -13,7 +13,10 @@ export const load: PageServerLoad = async ({ fetch, params }) => {
     ? await studentFetcher.findAllSessionsOf(+params.id)
     : null;
 
-  return { student, deposits, sessions };
+  const completed_sessions = sessions?.filter((s) => s.completed);
+  const future_sessions = sessions?.filter((s) => !s.completed);
+
+  return { student, deposits, completed_sessions, future_sessions };
 };
 
 export const actions: Actions = {

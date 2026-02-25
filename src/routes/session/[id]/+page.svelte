@@ -18,7 +18,19 @@
         </form>
     </div>
     <hr />
-    <span>Deposited on {data.session.date.toLocaleDateString("en-US")}</span>
+    <div class="flex flex-col">
+        <span>
+            {data.session.completed ? "Completed on" : "Scheduled for"}
+            {data.session.date.toLocaleString()}
+        </span>
+        {#if data.session.weeks != 0}
+            <span>
+                Weekly {data.session.weeks > 1
+                    ? `for ${data.session.weeks} weeks`
+                    : ""}
+            </span>
+        {/if}
+    </div>
 {:else}
     <h1>Deposit does not exist</h1>
 {/if}

@@ -5,7 +5,9 @@ import { StudentFetcher } from "$lib/backend/modules/student/Student.controller"
 
 export const load: PageServerLoad = async ({ fetch, params }) => {
   const studentFetcher = new StudentFetcher(BACKEND_DOMAIN, fetch);
-  const students = await studentFetcher.findAll();
+  const students = await studentFetcher
+    .findAll()
+    .then((data) => data.filter((s) => s.active));
 
   return {
     students,
@@ -20,6 +22,7 @@ export const actions: Actions = {
     const student_id = data.get("student_id") as string;
     const date = data.get("date") as string;
     const minutes = data.get("minutes") as string;
+    const weekly = data.get("weekly") == "on";
 
     if (student_id == null || date == null || minutes == null) {
       return;
@@ -29,6 +32,7 @@ export const actions: Actions = {
       student_id: +student_id,
       date: new Date(date),
       minutes: +minutes,
+      weeks: weekly ? 1 : 0,
     });
     console.log(response);
   },

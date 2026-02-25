@@ -15,11 +15,15 @@
     </label>
     <label>
         Date
-        <input name="date" type="date" />
+        <input name="date" type="datetime-local" />
     </label>
     <label>
         Minutes
         <input name="minutes" type="text" />
     </label>
-    <button>Add</button>
+    <label>
+        Weekly
+        <input name="weekly" type="checkbox" />
+    </label>
+    <button class="bg-blue-900 text-white">Add</button>
 </form>

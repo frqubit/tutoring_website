@@ -3,13 +3,27 @@
 
     let { data }: PageProps = $props();
 
-    const session_total =
-        data.sessions.map((v) => v.minutes).reduce((acc, cur) => acc + cur, 0) /
-        60;
+    function safe_div(a: number | undefined, b: number): number | undefined {
+        if (a === undefined) return undefined;
+
+        return a / b;
+    }
+
+    const completed_session_total =
+        safe_div(
+            data.completed_sessions
+                ?.map((v) => v.minutes)
+                .reduce((acc, cur) => acc + cur, 0),
+            60,
+        ) || 0;
 
     const deposit_total =
-        data.deposits.map((v) => v.cents).reduce((acc, cur) => acc + cur, 0) /
-        100;
+        safe_div(
+            data.deposits
+                ?.map((v) => v.cents)
+                .reduce((acc, cur) => acc + cur, 0),
+            100,
+        ) || 0;
 </script>
 
 {#if data.student && data.deposits}
@@ -25,8 +39,9 @@
     <hr />
 
     <h2 class="mt-4 mb-2 text-xl">
-        Balance: ${deposit_total - session_total * 35} ({deposit_total / 35 -
-            session_total} hours)
+        Balance: ${deposit_total - completed_session_total * 35} ({deposit_total /
+            35 -
+            completed_session_total} hours)
     </h2>
 
     <h2 class="mt-4 mb-2 text-xl font-bold">Deposits</h2>
@@ -57,7 +72,7 @@
             </tr>
         </tbody>
     </table>
-    <h2 class="mt-4 mb-2 text-xl font-bold">Sessions</h2>
+    <h2 class="mt-4 mb-2 text-xl font-bold">Future Sessions</h2>
 
     <table class="border-3 w-1/2">
         <thead>
@@ -67,7 +82,31 @@
             </tr>
         </thead>
         <tbody>
-            {#each data.sessions as session}
+            {#each data.future_sessions as session}
+                <tr>
+                    <td
+                        ><a
+                            href={`/session/${session.id}`}
+                            class="text-blue-700">{session.date}</a
+                        ></td
+                    >
+                    <td>{session.minutes / 60}</td>
+                </tr>
+            {/each}
+        </tbody>
+    </table>
+
+    <h2 class="mt-4 mb-2 text-xl font-bold">Completed Sessions</h2>
+
+    <table class="border-3 w-1/2">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Hours</th>
+            </tr>
+        </thead>
+        <tbody>
+            {#each data.completed_sessions as session}
                 <tr>
                     <td
                         ><a
@@ -81,7 +120,7 @@
 
             <tr class="border-t-1">
                 <td>Total</td>
-                <td>{session_total}</td>
+                <td>{completed_session_total}</td>
             </tr>
         </tbody>
     </table>
