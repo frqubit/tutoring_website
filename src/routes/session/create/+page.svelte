@@ -22,8 +22,8 @@
         <input name="minutes" type="text" />
     </label>
     <label>
-        Weekly
-        <input name="weekly" type="checkbox" />
+        Every Week(s)
+        <input name="every" type="text" />
     </label>
     <button class="bg-blue-900 text-white">Add</button>
 </form>

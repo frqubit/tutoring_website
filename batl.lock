@@ -1,0 +1,23 @@
+name = "frqubit.tutoring.website"
+version = "0.1.0"
+
+[environment]
+version = "0.3.0"
+
+[[dependencies]]
+name = "frqubit.tutoring.backend"
+version = "0.1.0"
+hashid = "040D5CDD580110DDB22403007FD8E5FCBE50B0370E69D1A7ED040740312A4747"
+sources = []
+
+[[dependencies]]
+name = "frqubit.tutoring.database"
+version = "0.1.0"
+hashid = "9618E381D77FE5DE7D9A48038B63F55E440D4E5201CD644C0B7215D7FC3BE849"
+sources = []
+
+[[dependencies]]
+name = "frqubit.tutoring.database.old_data"
+version = "0.1.0"
+hashid = "477EE91F82A837537C21345B049C2BFCE878EF94C668461BE253D490C4B93D65"
+sources = []

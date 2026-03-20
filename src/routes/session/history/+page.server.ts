@@ -4,7 +4,7 @@ import { BACKEND_DOMAIN } from "$lib";
 
 export const load: PageServerLoad = async ({ fetch, params }) => {
   const sessionFetcher = new SessionFetcher(BACKEND_DOMAIN, fetch);
-  const sessions = await sessionFetcher.findAllUpcoming();
+  const sessions = await sessionFetcher.findAll();
 
   return { sessions };
 };
