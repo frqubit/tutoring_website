@@ -3,20 +3,53 @@ import { StudentFetcher } from "$lib/backend/modules/student/Student.controller"
 import { BACKEND_DOMAIN } from "$lib";
 import { redirect } from "@sveltejs/kit";
 
+interface SessionsAndDeposits {
+  completed_sessions: Awaited<
+    ReturnType<StudentFetcher["findAllCompletedSessionsOf"]>
+  >;
+  future_sessions: Awaited<
+    ReturnType<StudentFetcher["findAllFutureSessionsOf"]>
+  >;
+  deposits: Awaited<ReturnType<StudentFetcher["findAllDepositsOf"]>>;
+}
+
+async function find_sessions_and_deposits(
+  fetcher: StudentFetcher,
+  id: number,
+): Promise<SessionsAndDeposits | null> {
+  const deposits = await fetcher.findAllDepositsOf(id);
+
+  if (!deposits) return null;
+
+  const completed_sessions = await fetcher.findAllCompletedSessionsOf(id);
+
+  if (!completed_sessions) return null;
+
+  const future_sessions = await fetcher.findAllFutureSessionsOf(id);
+
+  if (!future_sessions) return null;
+
+  return {
+    deposits,
+    completed_sessions,
+    future_sessions,
+  };
+}
+
 export const load: PageServerLoad = async ({ fetch, params }) => {
   const studentFetcher = new StudentFetcher(BACKEND_DOMAIN, fetch);
   const student = await studentFetcher.findOne(+params.id);
-  const deposits = student
-    ? await studentFetcher.findAllDepositsOf(+params.id)
-    : null;
-  const sessions = deposits
-    ? await studentFetcher.findAllSessionsOf(+params.id)
-    : null;
 
-  const completed_sessions = sessions?.filter((s) => s.completed);
-  const future_sessions = sessions?.filter((s) => !s.completed);
+  if (!student) {
+    return { student };
+  }
 
-  return { student, deposits, completed_sessions, future_sessions };
+  const sessions_and_deposits = await find_sessions_and_deposits(
+    studentFetcher,
+    +params.id,
+  );
+
+  return { student, ...sessions_and_deposits };
 };
 
 export const actions: Actions = {

@@ -7,7 +7,13 @@ export const load: PageServerLoad = async ({ fetch, params }) => {
   const sessionFetcher = new SessionFetcher(BACKEND_DOMAIN, fetch);
   const session = await sessionFetcher.findOne(+params.id);
 
-  return { session };
+  if (session && session.weeks > 0 && !session.completed) {
+    const future_dates = await sessionFetcher.findFutureDatesOf(+params.id);
+
+    return { session, future_dates };
+  } else {
+    return { session };
+  }
 };
 
 export const actions: Actions = {
@@ -16,6 +22,6 @@ export const actions: Actions = {
 
     await sessionFetcher.remove(+params.id);
 
-    throw redirect(303, "/session");
+    throw redirect(303, `/student`);
   },
 };

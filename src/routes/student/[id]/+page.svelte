@@ -1,7 +1,7 @@
 <script lang="ts">
     import type { PageProps } from "./$types";
 
-    let { data }: PageProps = $props();
+    let { data, params }: PageProps = $props();
 
     function safe_div(a: number | undefined, b: number): number | undefined {
         if (a === undefined) return undefined;
@@ -79,10 +79,11 @@
             <tr>
                 <th>Date</th>
                 <th>Hours</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
-            {#each data.future_sessions as session}
+            {#each data.future_sessions as session, i}
                 <tr>
                     <td
                         ><a
@@ -91,6 +92,15 @@
                         ></td
                     >
                     <td>{session.minutes / 60}</td>
+                    <td class="px-8">
+                        {#if i == 0}
+                            <a
+                                href={`/utils/student/${params.id}/complete/${session.id}`}
+                            >
+                                Complete
+                            </a>
+                        {/if}
+                    </td>
                 </tr>
             {/each}
         </tbody>
@@ -110,7 +120,7 @@
                 <tr>
                     <td
                         ><a
-                            href={`/deposit/${session.id}`}
+                            href={`/session/${session.id}`}
                             class="text-blue-700">{session.date}</a
                         ></td
                     >
