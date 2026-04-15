@@ -1,20 +1,19 @@
 import type { Actions, PageServerLoad } from "./$types";
-import { DepositFetcher } from "$lib/backend/modules/deposit/Deposit.controller";
-import { BACKEND_DOMAIN } from "$lib";
+import { DepositFetcher } from "$lib/fetchers";
 import { redirect } from "@sveltejs/kit";
 
 export const load: PageServerLoad = async ({ fetch, params }) => {
-  const depositFetcher = new DepositFetcher(BACKEND_DOMAIN, fetch);
-  const deposit = await depositFetcher.findOne(+params.id);
+  const depositFetcher = new DepositFetcher(fetch);
+  const deposit = await depositFetcher.findOne(undefined, [+params.id]);
 
   return { deposit };
 };
 
 export const actions: Actions = {
   delete: async ({ fetch, params }) => {
-    const depositFetcher = new DepositFetcher(BACKEND_DOMAIN, fetch);
+    const depositFetcher = new DepositFetcher(fetch);
 
-    await depositFetcher.remove(+params.id);
+    await depositFetcher.remove(undefined, [+params.id]);
 
     throw redirect(303, "/deposit");
   },

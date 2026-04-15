@@ -1,10 +1,9 @@
 import type { Actions, PageServerLoad } from "./$types";
-import { DepositFetcher } from "$lib/backend/modules/deposit/Deposit.controller";
-import { BACKEND_DOMAIN } from "$lib";
+import { DepositFetcher } from "$lib/fetchers";
 import { StudentFetcher } from "$lib/backend/modules/student/Student.controller";
 
 export const load: PageServerLoad = async ({ fetch, params }) => {
-  const studentFetcher = new StudentFetcher(BACKEND_DOMAIN, fetch);
+  const studentFetcher = new StudentFetcher(fetch);
   const students = await studentFetcher.findAll();
 
   return {
@@ -14,7 +13,7 @@ export const load: PageServerLoad = async ({ fetch, params }) => {
 
 export const actions: Actions = {
   default: async ({ request, fetch }) => {
-    const depositFetcher = new DepositFetcher(BACKEND_DOMAIN, fetch);
+    const depositFetcher = new DepositFetcher(fetch);
 
     const data = await request.formData();
     const student_id = data.get("student_id") as string;
@@ -25,11 +24,14 @@ export const actions: Actions = {
       return;
     }
 
-    const response = await depositFetcher.create({
-      student_id: +student_id,
-      date: new Date(date),
-      cents: +cents,
-    });
+    const response = await depositFetcher.create(
+      {
+        student_id: +student_id,
+        date: new Date(date),
+        cents: +cents,
+      },
+      [],
+    );
     console.log(response);
   },
 };
