@@ -1,12 +1,11 @@
 import type { Actions, PageServerLoad } from "./$types";
-import { SessionFetcher } from "$lib/backend/modules/session/Session.controller";
+import { SessionFetcher, StudentFetcher } from "$lib/fetchers";
 import { BACKEND_DOMAIN } from "$lib";
-import { StudentFetcher } from "$lib/backend/modules/student/Student.controller";
 
 export const load: PageServerLoad = async ({ fetch, params }) => {
-  const studentFetcher = new StudentFetcher(BACKEND_DOMAIN, fetch);
+  const studentFetcher = new StudentFetcher(fetch);
   const students = await studentFetcher
-    .findAll()
+    .findAll([])
     .then((data) => data.filter((s) => s.active));
 
   return {
@@ -16,7 +15,7 @@ export const load: PageServerLoad = async ({ fetch, params }) => {
 
 export const actions: Actions = {
   default: async ({ request, fetch }) => {
-    const sessionFetcher = new SessionFetcher(BACKEND_DOMAIN, fetch);
+    const sessionFetcher = new SessionFetcher(fetch);
 
     const data = await request.formData();
     const student_id = data.get("student_id") as string;
@@ -33,12 +32,15 @@ export const actions: Actions = {
       return;
     }
 
-    const response = await sessionFetcher.create({
-      student_id: +student_id,
-      date: new Date(date),
-      minutes: +minutes,
-      every: +every,
-      occurrences: +every == 0 ? 0 : 1,
-    });
+    const response = await sessionFetcher.create(
+      {
+        student_id: +student_id,
+        date: new Date(date),
+        minutes: +minutes,
+        every: +every,
+        occurrences: +every == 0 ? 0 : 1,
+      },
+      [],
+    );
   },
 };

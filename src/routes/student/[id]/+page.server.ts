@@ -1,5 +1,5 @@
 import type { Actions, PageServerLoad } from "./$types";
-import { StudentFetcher } from "$lib/backend/modules/student/Student.controller";
+import { StudentFetcher } from "$lib/fetchers";
 import { BACKEND_DOMAIN } from "$lib";
 import { redirect } from "@sveltejs/kit";
 
@@ -17,15 +17,15 @@ async function find_sessions_and_deposits(
   fetcher: StudentFetcher,
   id: number,
 ): Promise<SessionsAndDeposits | null> {
-  const deposits = await fetcher.findAllDepositsOf(id);
+  const deposits = await fetcher.findAllDepositsOf([id]);
 
   if (!deposits) return null;
 
-  const completed_sessions = await fetcher.findAllCompletedSessionsOf(id);
+  const completed_sessions = await fetcher.findAllCompletedSessionsOf([id]);
 
   if (!completed_sessions) return null;
 
-  const future_sessions = await fetcher.findAllFutureSessionsOf(id);
+  const future_sessions = await fetcher.findAllFutureSessionsOf([id]);
 
   if (!future_sessions) return null;
 
@@ -37,8 +37,8 @@ async function find_sessions_and_deposits(
 }
 
 export const load: PageServerLoad = async ({ fetch, params }) => {
-  const studentFetcher = new StudentFetcher(BACKEND_DOMAIN, fetch);
-  const student = await studentFetcher.findOne(+params.id);
+  const studentFetcher = new StudentFetcher(fetch);
+  const student = await studentFetcher.findOne([+params.id]);
 
   if (!student) {
     return { student };
@@ -54,9 +54,9 @@ export const load: PageServerLoad = async ({ fetch, params }) => {
 
 export const actions: Actions = {
   delete: async ({ fetch, params }) => {
-    const studentFetcher = new StudentFetcher(BACKEND_DOMAIN, fetch);
+    const studentFetcher = new StudentFetcher(fetch);
 
-    await studentFetcher.remove(+params.id);
+    await studentFetcher.remove([+params.id]);
 
     throw redirect(303, "/student");
   },

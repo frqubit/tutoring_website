@@ -1,10 +1,9 @@
 import type { Actions, PageServerLoad } from "./$types";
-import { DepositFetcher } from "$lib/fetchers";
-import { StudentFetcher } from "$lib/backend/modules/student/Student.controller";
+import { DepositFetcher, StudentFetcher } from "$lib/fetchers";
 
 export const load: PageServerLoad = async ({ fetch, params }) => {
   const studentFetcher = new StudentFetcher(fetch);
-  const students = await studentFetcher.findAll();
+  const students = await studentFetcher.findAll([]);
 
   return {
     students,

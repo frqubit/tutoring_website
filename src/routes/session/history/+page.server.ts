@@ -1,10 +1,9 @@
 import type { PageServerLoad } from "./$types";
-import { SessionFetcher } from "$lib/backend/modules/session/Session.controller";
-import { BACKEND_DOMAIN } from "$lib";
+import { SessionFetcher } from "$lib/fetchers";
 
 export const load: PageServerLoad = async ({ fetch, params }) => {
-  const sessionFetcher = new SessionFetcher(BACKEND_DOMAIN, fetch);
-  const sessions = await sessionFetcher.findAll();
+  const sessionFetcher = new SessionFetcher(fetch);
+  const sessions = await sessionFetcher.findAll([]);
 
   return { sessions };
 };
