@@ -21,5 +21,5 @@
         Cents
         <input name="cents" type="text" />
     </label>
-    <button>Add</button>
+    <button class="bg-blue-900 text-white">Add</button>
 </form>

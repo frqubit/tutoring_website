@@ -10,5 +10,9 @@ export const GET: RequestHandler = async ({ fetch, params }) => {
     +params.idx,
   ]);
 
-  throw redirect(307, `/session/${params.id}`);
+  if (+params.idx == 0) {
+    throw redirect(307, "/session");
+  } else {
+    throw redirect(307, `/session/${params.id}`);
+  }
 };

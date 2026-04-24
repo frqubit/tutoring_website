@@ -3,7 +3,9 @@ import { DepositFetcher, StudentFetcher } from "$lib/fetchers";
 
 export const load: PageServerLoad = async ({ fetch, params }) => {
   const studentFetcher = new StudentFetcher(fetch);
-  const students = await studentFetcher.findAll([]);
+  const students = await studentFetcher
+    .findAll([])
+    .then((data) => data.filter((s) => s.active));
 
   return {
     students,

@@ -21,6 +21,6 @@ export const actions: Actions = {
 
     await sessionFetcher.remove([+params.id]);
 
-    throw redirect(303, `/student`);
+    throw redirect(303, `/session`);
   },
 };
