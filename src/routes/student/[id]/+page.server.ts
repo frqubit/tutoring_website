@@ -60,4 +60,11 @@ export const actions: Actions = {
 
     throw redirect(303, "/student");
   },
+  toggleActive: async ({ fetch, params }) => {
+    const studentFetcher = new StudentFetcher(fetch);
+
+    await studentFetcher.toggleActive([+params.id]);
+
+    throw redirect(303, `/student/${params.id}`);
+  },
 };

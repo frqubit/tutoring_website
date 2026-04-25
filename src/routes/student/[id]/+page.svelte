@@ -9,21 +9,27 @@
         return a / b;
     }
 
-    const completed_session_total =
-        safe_div(
-            data.completed_sessions
-                ?.map((v) => v.minutes)
-                .reduce((acc, cur) => acc + cur, 0),
-            60,
-        ) || 0;
+    function get_completed_session_total() {
+        return (
+            safe_div(
+                data.completed_sessions
+                    ?.map((v) => v.minutes)
+                    .reduce((acc, cur) => acc + cur, 0),
+                60,
+            ) || 0
+        );
+    }
 
-    const deposit_total =
-        safe_div(
-            data.deposits
-                ?.map((v) => v.cents)
-                .reduce((acc, cur) => acc + cur, 0),
-            100,
-        ) || 0;
+    function get_deposit_total() {
+        return (
+            safe_div(
+                data.deposits
+                    ?.map((v) => v.cents)
+                    .reduce((acc, cur) => acc + cur, 0),
+                100,
+            ) || 0
+        );
+    }
 </script>
 
 {#if data.student && data.deposits}
@@ -32,16 +38,26 @@
             {data.student.name} ({data.student.active ? "active" : "inactive"})
         </h1>
 
-        <form method="POST" action="?/delete" class="ml-auto">
-            <button>Delete</button>
-        </form>
+        <div class="flex flex-row gap-x-6 ml-auto">
+            <form method="POST" action="?/toggleActive" class="ml-auto">
+                <button
+                    >{data.student.active
+                        ? "Set inactive"
+                        : "Set active"}</button
+                >
+            </form>
+
+            <form method="POST" action="?/delete" class="ml-auto">
+                <button class="text-red-700">Delete</button>
+            </form>
+        </div>
     </div>
     <hr />
 
     <h2 class="mt-4 mb-2 text-xl">
-        Balance: ${deposit_total - completed_session_total * 35} ({deposit_total /
+        Balance: ${get_deposit_total() - get_completed_session_total() * 35} ({get_deposit_total() /
             35 -
-            completed_session_total} hours)
+            get_completed_session_total()} hours)
     </h2>
 
     <h2 class="mt-4 mb-2 text-xl font-bold">Deposits</h2>
@@ -68,7 +84,7 @@
 
             <tr class="border-t-1">
                 <td>Total</td>
-                <td>${deposit_total}</td>
+                <td>${get_deposit_total()}</td>
             </tr>
         </tbody>
     </table>
@@ -128,9 +144,9 @@
                 </tr>
             {/each}
 
-            <tr class="border-t-1">
+            <tr class="border-t">
                 <td>Total</td>
-                <td>{completed_session_total}</td>
+                <td>{get_completed_session_total()}</td>
             </tr>
         </tbody>
     </table>

@@ -21,7 +21,9 @@
                         >{student.name}</a
                     ></td
                 >
-                <td>{student.active}</td>
+                <td class={student.active ? "text-green-600" : "text-red-600"}
+                    >{student.active}</td
+                >
             </tr>
         {/each}
     </tbody>
