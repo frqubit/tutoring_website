@@ -38,7 +38,7 @@ export const actions: Actions = {
         date: new Date(date),
         minutes: +minutes,
         every: +every,
-        occurrences: +every == 0 ? 0 : +every,
+        occurrences: +every == 0 ? 0 : 1,
       },
       [],
     );

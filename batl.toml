@@ -12,6 +12,7 @@ dev = "concurrently 'batl frqubit.tutoring.backend:dev' 'pnpm dev'"
 "frqubit.tutoring.backend" = "0.1.0"
 
 [links]
+"frqubit.tutoring.backend/src/utils" = "src/lib/backend/utils"
 "frqubit.tutoring.backend/src/modules" = "src/lib/backend/modules"
 
 [restrict.Unix]
