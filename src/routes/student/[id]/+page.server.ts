@@ -36,8 +36,8 @@ async function find_sessions_and_deposits(
   };
 }
 
-export const load: PageServerLoad = async ({ fetch, params }) => {
-  const studentFetcher = new StudentFetcher(fetch);
+export const load: PageServerLoad = async ({ fetch, params, url }) => {
+  const studentFetcher = new StudentFetcher(fetch, url);
   const student = await studentFetcher.findOne([+params.id]);
 
   if (!student) {
@@ -53,15 +53,15 @@ export const load: PageServerLoad = async ({ fetch, params }) => {
 };
 
 export const actions: Actions = {
-  delete: async ({ fetch, params }) => {
-    const studentFetcher = new StudentFetcher(fetch);
+  delete: async ({ fetch, params, url }) => {
+    const studentFetcher = new StudentFetcher(fetch, url);
 
     await studentFetcher.remove([+params.id]);
 
     throw redirect(303, "/student");
   },
-  toggleActive: async ({ fetch, params }) => {
-    const studentFetcher = new StudentFetcher(fetch);
+  toggleActive: async ({ fetch, params, url }) => {
+    const studentFetcher = new StudentFetcher(fetch, url);
 
     await studentFetcher.toggleActive([+params.id]);
 

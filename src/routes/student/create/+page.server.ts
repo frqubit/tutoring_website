@@ -3,8 +3,8 @@ import { StudentFetcher } from "$lib/fetchers";
 import { BACKEND_DOMAIN } from "$lib";
 
 export const actions: Actions = {
-  default: async ({ request, fetch }) => {
-    const studentFetcher = new StudentFetcher(fetch);
+  default: async ({ request, fetch, url }) => {
+    const studentFetcher = new StudentFetcher(fetch, url);
 
     const data = await request.formData();
     const name = data.get("name") as string;

@@ -5,10 +5,10 @@ import { SessionFetcher as SessionFetcherInternal } from "./backend/modules/sess
 import { BACKEND_DOMAIN, SIGNIN_URL } from "$lib";
 
 export class DepositFetcher extends DepositFetcherInternal {
-  constructor(fetch_: typeof fetch) {
+  constructor(fetch_: typeof fetch, loading_url: URL) {
     super({
       redirect,
-      signin_url: SIGNIN_URL,
+      loading_url,
       fetch: fetch_,
       domain: BACKEND_DOMAIN,
     });
@@ -16,10 +16,10 @@ export class DepositFetcher extends DepositFetcherInternal {
 }
 
 export class StudentFetcher extends StudentFetcherInternal {
-  constructor(fetch_: typeof fetch) {
+  constructor(fetch_: typeof fetch, loading_url: URL) {
     super({
       redirect,
-      signin_url: SIGNIN_URL,
+      loading_url,
       fetch: fetch_,
       domain: BACKEND_DOMAIN,
     });
@@ -27,10 +27,10 @@ export class StudentFetcher extends StudentFetcherInternal {
 }
 
 export class SessionFetcher extends SessionFetcherInternal {
-  constructor(fetch_: typeof fetch) {
+  constructor(fetch_: typeof fetch, loading_url: URL) {
     super({
       redirect,
-      signin_url: SIGNIN_URL,
+      loading_url,
       fetch: fetch_,
       domain: BACKEND_DOMAIN,
     });

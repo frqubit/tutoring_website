@@ -2,8 +2,8 @@ import type { Actions, PageServerLoad } from "./$types";
 import { SessionFetcher } from "$lib/fetchers";
 import { redirect } from "@sveltejs/kit";
 
-export const load: PageServerLoad = async ({ fetch, params }) => {
-  const sessionFetcher = new SessionFetcher(fetch);
+export const load: PageServerLoad = async ({ fetch, params, url }) => {
+  const sessionFetcher = new SessionFetcher(fetch, url);
   const session = await sessionFetcher.findOne([+params.id]);
 
   if (session && session.occurrences > 0 && !session.completed) {
@@ -16,8 +16,8 @@ export const load: PageServerLoad = async ({ fetch, params }) => {
 };
 
 export const actions: Actions = {
-  delete: async ({ fetch, params }) => {
-    const sessionFetcher = new SessionFetcher(fetch);
+  delete: async ({ fetch, params, url }) => {
+    const sessionFetcher = new SessionFetcher(fetch, url);
 
     await sessionFetcher.remove([+params.id]);
 

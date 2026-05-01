@@ -3,8 +3,8 @@ import { SessionFetcher } from "$lib/fetchers";
 import { redirect } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
 
-export const GET: RequestHandler = async ({ fetch, params }) => {
-  const sessionFetcher = new SessionFetcher(fetch);
+export const GET: RequestHandler = async ({ fetch, params, url }) => {
+  const sessionFetcher = new SessionFetcher(fetch, url);
   const result = await sessionFetcher.removeOneInSeries([
     +params.id,
     +params.idx,

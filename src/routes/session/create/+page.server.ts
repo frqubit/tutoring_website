@@ -2,8 +2,8 @@ import type { Actions, PageServerLoad } from "./$types";
 import { SessionFetcher, StudentFetcher } from "$lib/fetchers";
 import { BACKEND_DOMAIN } from "$lib";
 
-export const load: PageServerLoad = async ({ fetch, params }) => {
-  const studentFetcher = new StudentFetcher(fetch);
+export const load: PageServerLoad = async ({ fetch, url }) => {
+  const studentFetcher = new StudentFetcher(fetch, url);
   const students = await studentFetcher
     .findAll([])
     .then((data) => data.filter((s) => s.active));
@@ -14,8 +14,8 @@ export const load: PageServerLoad = async ({ fetch, params }) => {
 };
 
 export const actions: Actions = {
-  default: async ({ request, fetch }) => {
-    const sessionFetcher = new SessionFetcher(fetch);
+  default: async ({ request, fetch, url }) => {
+    const sessionFetcher = new SessionFetcher(fetch, url);
 
     const data = await request.formData();
     const student_id = data.get("student_id") as string;
