@@ -8,8 +8,14 @@
 
 <svelte:head><link rel="icon" href={favicon} /></svelte:head>
 <div class="w-full min-h-screen p-6">
-    <div class="w-full border-b-2 mb-4 flex flex-row items-center">
+    <div class="w-full border-b-2 mb-4 flex flex-row items-center gap-x-5">
         <a href="/" class="text-blue-700 text-xl font-semibold">Homepage</a>
+        <a href="/student" class="text-blue-700 text-xl font-semibold"
+            >Students</a
+        >
+        <a href="/session" class="text-blue-700 text-xl font-semibold"
+            >Sessions</a
+        >
 
         {#if !data.signed_in}
             <a href={SIGNIN_URL} class="text-blue-700 ml-auto">Sign in</a>
