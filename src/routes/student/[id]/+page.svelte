@@ -60,98 +60,104 @@
             get_completed_session_total()} hours)
     </h2>
 
-    <h2 class="mt-4 mb-2 text-xl font-bold">Deposits</h2>
+    <div class="flex flex-row items-start justify-start gap-x-4">
+        <div class="w-1/2">
+            <h2 class="mt-4 mb-2 text-xl font-bold">Deposits</h2>
 
-    <table class="border-3 w-1/2">
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Amount</th>
-            </tr>
-        </thead>
-        <tbody>
-            {#each data.deposits as deposit}
-                <tr>
-                    <td
-                        ><a
-                            href={`/deposit/${deposit.id}`}
-                            class="text-blue-700">{deposit.date}</a
-                        ></td
-                    >
-                    <td>${deposit.cents / 100}</td>
-                </tr>
-            {/each}
-
-            <tr class="border-t-1">
-                <td>Total</td>
-                <td>${get_deposit_total()}</td>
-            </tr>
-        </tbody>
-    </table>
-    <h2 class="mt-4 mb-2 text-xl font-bold">Future Sessions</h2>
-
-    <table class="border-3 w-1/2">
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Hours</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            {#each data.future_sessions as session, i}
-                <tr>
-                    <td
-                        ><a
-                            href={`/session/${session.id}`}
-                            class="text-blue-700">{session.date}</a
-                        ></td
-                    >
-                    <td>{session.minutes / 60}</td>
-                    <td class="px-8">
-                        {#if i == 0}
-                            <a
-                                href={`/utils/student/${params.id}/complete/${session.id}`}
+            <table class="border-3 w-full">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {#each data.deposits as deposit}
+                        <tr>
+                            <td
+                                ><a
+                                    href={`/deposit/${deposit.id}`}
+                                    class="text-blue-700">{deposit.date}</a
+                                ></td
                             >
-                                Complete
-                            </a>
-                        {/if}
-                    </td>
-                </tr>
-            {/each}
-        </tbody>
-    </table>
+                            <td>${deposit.cents / 100}</td>
+                        </tr>
+                    {/each}
 
-    <h2 class="mt-4 mb-2 text-xl font-bold">Completed Sessions</h2>
+                    <tr class="border-t-1">
+                        <td>Total</td>
+                        <td>${get_deposit_total()}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <h2 class="mt-4 mb-2 text-xl font-bold">Future Sessions</h2>
 
-    <table class="border-3 w-1/2">
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Hours</th>
-            </tr>
-        </thead>
-        <tbody>
-            {#each data.completed_sessions as session}
-                <tr>
-                    <td
-                        ><a
-                            href={`/session/${session.id}`}
-                            class="text-blue-700">{session.date}</a
-                        ></td
-                    >
-                    <td>{session.minutes / 60}</td>
-                </tr>
-            {/each}
+            <table class="border-3 w-full">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Hours</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {#each data.future_sessions as session, i}
+                        <tr>
+                            <td
+                                ><a
+                                    href={`/session/${session.id}`}
+                                    class="text-blue-700">{session.date}</a
+                                ></td
+                            >
+                            <td>{session.minutes / 60}</td>
+                            <td class="px-8">
+                                {#if i == 0}
+                                    <a
+                                        href={`/utils/student/${params.id}/complete/${session.id}`}
+                                    >
+                                        Complete
+                                    </a>
+                                {/if}
+                            </td>
+                        </tr>
+                    {/each}
+                </tbody>
+            </table>
+        </div>
 
-            <tr class="border-t">
-                <td>Total</td>
-                <td>{get_completed_session_total()}</td>
-            </tr>
-        </tbody>
-    </table>
+        <div class="w-1/2">
+            <h2 class="mt-4 mb-2 text-xl font-bold">Completed Sessions</h2>
+
+            <table class="border-3 w-full">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Hours</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {#each data.completed_sessions as session}
+                        <tr>
+                            <td
+                                ><a
+                                    href={`/session/${session.id}`}
+                                    class="text-blue-700">{session.date}</a
+                                ></td
+                            >
+                            <td>{session.minutes / 60}</td>
+                        </tr>
+                    {/each}
+
+                    <tr class="border-t">
+                        <td>Total</td>
+                        <td>{get_completed_session_total()}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 {:else}
-    <h1>Deposit does not exist</h1>
+    <h1>Student does not exist</h1>
 {/if}
 
 <style>

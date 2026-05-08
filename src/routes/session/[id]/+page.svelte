@@ -23,10 +23,10 @@
             {data.session.completed ? "Completed on" : "Scheduled for"}
             {data.session.date.toLocaleString()}
         </span>
-        {#if data.session.occurrences != 0}
+        {#if data.session.every != 0}
             <span>
-                Weekly {data.session.occurrences > 1
-                    ? `for ${data.session.occurrences} weeks`
+                Weekly {data.session.ends
+                    ? `until ${data.session.ends.toDateString()}`
                     : ""}
             </span>
         {/if}

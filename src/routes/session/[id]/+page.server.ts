@@ -6,7 +6,7 @@ export const load: PageServerLoad = async ({ fetch, params, url }) => {
   const sessionFetcher = new SessionFetcher(fetch, url);
   const session = await sessionFetcher.findOne([+params.id]);
 
-  if (session && session.occurrences > 0 && !session.completed) {
+  if (session && session.every > 0 && !session.completed) {
     const future_dates = await sessionFetcher.findFutureDatesOf([+params.id]);
 
     return { session, future_dates };
