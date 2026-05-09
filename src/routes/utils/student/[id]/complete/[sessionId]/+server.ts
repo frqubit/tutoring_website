@@ -4,8 +4,8 @@ import { redirect } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
 
 export const GET: RequestHandler = async ({ fetch, params, url }) => {
-  const sessionFetcher = new SessionFetcher(fetch, url);
-  const result = await sessionFetcher.markCompleted([+params.sessionId]);
+  const sessionFetcher = SessionFetcher(fetch, url);
+  const result = await sessionFetcher.MarkCompleted([+params.sessionId]);
 
   throw redirect(307, `/student/${params.id}`);
 };

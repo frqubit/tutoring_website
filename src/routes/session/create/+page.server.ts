@@ -3,9 +3,9 @@ import { SessionFetcher, StudentFetcher } from "$lib/fetchers";
 import { BACKEND_DOMAIN } from "$lib";
 
 export const load: PageServerLoad = async ({ fetch, url }) => {
-  const studentFetcher = new StudentFetcher(fetch, url);
+  const studentFetcher = StudentFetcher(fetch, url);
   const students = await studentFetcher
-    .findAll([])
+    .FindAll([])
     .then((data) => data.filter((s) => s.active));
 
   return {
@@ -15,7 +15,7 @@ export const load: PageServerLoad = async ({ fetch, url }) => {
 
 export const actions: Actions = {
   default: async ({ request, fetch, url }) => {
-    const sessionFetcher = new SessionFetcher(fetch, url);
+    const sessionFetcher = SessionFetcher(fetch, url);
 
     const data = await request.formData();
     const student_id = data.get("student_id") as string;
@@ -32,7 +32,7 @@ export const actions: Actions = {
       return;
     }
 
-    const response = await sessionFetcher.create(
+    const response = await sessionFetcher.Create(
       {
         student_id: +student_id,
         date: new Date(date),

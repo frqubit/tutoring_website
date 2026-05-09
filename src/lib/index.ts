@@ -35,3 +35,10 @@ function getSignoutUrl(): string {
 
 export const SIGNIN_URL = getSigninUrl();
 export const SIGNOUT_URL = getSignoutUrl();
+
+export const send_cookie_fetch: typeof fetch = (url, settings) => {
+  return fetch(url, {
+    ...settings,
+    credentials: "include",
+  });
+};

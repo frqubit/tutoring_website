@@ -3,11 +3,11 @@ import { SessionFetcher } from "$lib/fetchers";
 import { redirect } from "@sveltejs/kit";
 
 export const load: PageServerLoad = async ({ fetch, params, url }) => {
-  const sessionFetcher = new SessionFetcher(fetch, url);
-  const session = await sessionFetcher.findOne([+params.id]);
+  const sessionFetcher = SessionFetcher(fetch, url);
+  const session = await sessionFetcher.FindOne([+params.id]);
 
   if (session && session.every > 0 && !session.completed) {
-    const future_dates = await sessionFetcher.findFutureDatesOf([+params.id]);
+    const future_dates = await sessionFetcher.FindFutureDatesOf([+params.id]);
 
     return { session, future_dates };
   } else {
@@ -17,9 +17,9 @@ export const load: PageServerLoad = async ({ fetch, params, url }) => {
 
 export const actions: Actions = {
   delete: async ({ fetch, params, url }) => {
-    const sessionFetcher = new SessionFetcher(fetch, url);
+    const sessionFetcher = SessionFetcher(fetch, url);
 
-    await sessionFetcher.remove([+params.id]);
+    await sessionFetcher.Remove([+params.id]);
 
     throw redirect(303, `/session`);
   },

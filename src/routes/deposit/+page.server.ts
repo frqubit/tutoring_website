@@ -4,8 +4,8 @@ import { BACKEND_DOMAIN, SIGNIN_URL } from "$lib";
 import { redirect } from "@sveltejs/kit";
 
 export const load: PageServerLoad = async ({ fetch, url }) => {
-  const depositFetcher = new DepositFetcher(fetch, url);
-  const deposits = await depositFetcher.findAll([]);
+  const depositFetcher = DepositFetcher(fetch, url);
+  const deposits = await depositFetcher.FindAll([]);
 
   return { deposits };
 };

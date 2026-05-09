@@ -3,32 +3,32 @@ import { SessionFetcher, StudentFetcher } from "$lib/fetchers";
 import { BACKEND_DOMAIN } from "$lib";
 import { redirect } from "@sveltejs/kit";
 
-interface SessionsAndDeposits {
-  completed_sessions: Awaited<
-    ReturnType<StudentFetcher["findAllCompletedSessionsOf"]>
-  >;
-  future_sessions: Awaited<
-    ReturnType<StudentFetcher["findAllFutureSessionsOf"]>
-  >;
-  deposits: Awaited<ReturnType<StudentFetcher["findAllDepositsOf"]>>;
-}
+// interface SessionsAndDeposits {
+//   completed_sessions: Awaited<
+//     ReturnType<StudentFetcher["findAllCompletedSessionsOf"]>
+//   >;
+//   future_sessions: Awaited<
+//     ReturnType<StudentFetcher["findAllFutureSessionsOf"]>
+//   >;
+//   deposits: Awaited<ReturnType<StudentFetcher["findAllDepositsOf"]>>;
+// }
 
 async function find_sessions_and_deposits(
-  student_fetcher: StudentFetcher,
-  session_fetcher: SessionFetcher,
+  student_fetcher: ReturnType<typeof StudentFetcher>,
+  session_fetcher: ReturnType<typeof SessionFetcher>,
   id: number,
-): Promise<SessionsAndDeposits | null> {
-  const deposits = await student_fetcher.findAllDepositsOf([id]);
+) {
+  const deposits = await student_fetcher.FindAllDepositsOf([id]);
 
   if (!deposits) return null;
 
-  const completed_sessions = await student_fetcher.findAllCompletedSessionsOf([
+  const completed_sessions = await student_fetcher.FindAllCompletedSessionsOf([
     id,
   ]);
 
   if (!completed_sessions) return null;
 
-  const future_sessions = await session_fetcher.findAllByFilter(
+  const future_sessions = await session_fetcher.FindAllByFilter(
     {
       student_id: id,
       start: undefined,
@@ -48,9 +48,9 @@ async function find_sessions_and_deposits(
 }
 
 export const load: PageServerLoad = async ({ fetch, params, url }) => {
-  const studentFetcher = new StudentFetcher(fetch, url);
-  const sessionFetcher = new SessionFetcher(fetch, url);
-  const student = await studentFetcher.findOne([+params.id]);
+  const studentFetcher = StudentFetcher(fetch, url);
+  const sessionFetcher = SessionFetcher(fetch, url);
+  const student = await studentFetcher.FindOne([+params.id]);
 
   if (!student) {
     return { student };
@@ -67,16 +67,16 @@ export const load: PageServerLoad = async ({ fetch, params, url }) => {
 
 export const actions: Actions = {
   delete: async ({ fetch, params, url }) => {
-    const studentFetcher = new StudentFetcher(fetch, url);
+    const studentFetcher = StudentFetcher(fetch, url);
 
-    await studentFetcher.remove([+params.id]);
+    await studentFetcher.Remove([+params.id]);
 
     throw redirect(303, "/student");
   },
   toggleActive: async ({ fetch, params, url }) => {
-    const studentFetcher = new StudentFetcher(fetch, url);
+    const studentFetcher = StudentFetcher(fetch, url);
 
-    await studentFetcher.toggleActive([+params.id]);
+    await studentFetcher.ToggleActive([+params.id]);
 
     throw redirect(303, `/student/${params.id}`);
   },
