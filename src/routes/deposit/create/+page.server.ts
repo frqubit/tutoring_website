@@ -2,9 +2,9 @@ import type { Actions, PageServerLoad } from "./$types";
 import { DepositFetcher, StudentFetcher } from "$lib/fetchers";
 
 export const load: PageServerLoad = async ({ fetch, url }) => {
-  const studentFetcher = new StudentFetcher(fetch, url);
+  const studentFetcher = StudentFetcher(fetch, url);
   const students = await studentFetcher
-    .findAll([])
+    .FindAll([])
     .then((data) => data.filter((s) => s.active));
 
   return {
@@ -14,7 +14,7 @@ export const load: PageServerLoad = async ({ fetch, url }) => {
 
 export const actions: Actions = {
   default: async ({ request, fetch, url }) => {
-    const depositFetcher = new DepositFetcher(fetch, url);
+    const depositFetcher = DepositFetcher(fetch, url);
 
     const data = await request.formData();
     const student_id = data.get("student_id") as string;
@@ -25,7 +25,7 @@ export const actions: Actions = {
       return;
     }
 
-    const response = await depositFetcher.create(
+    const response = await depositFetcher.Create(
       {
         student_id: +student_id,
         date: new Date(date),

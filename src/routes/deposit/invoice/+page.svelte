@@ -1,7 +1,26 @@
 <script lang="ts">
     import type { PageProps } from "./$types";
-    import { SessionFetcher, type FetcherOutput } from "$lib/fetchers";
+    import {
+        SessionFetcher,
+        StudentFetcher,
+        type FetcherOutput,
+    } from "$lib/fetchers";
     import { send_cookie_fetch } from "$lib";
+
+    const MONTHS = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+    ];
 
     let { data }: PageProps = $props();
 
@@ -37,6 +56,82 @@
         });
 
         sessions = result;
+    }
+
+    let parent_name: string = $state("");
+    let invoice: string = $state("");
+
+    async function generateInvoice() {
+        const studentFetcher = StudentFetcher(
+            send_cookie_fetch,
+            URL.parse(window.location.href)!,
+        );
+        const sessionFetcher = SessionFetcher(
+            send_cookie_fetch,
+            URL.parse(window.location.href)!,
+        );
+
+        const lastMonth = month == 1 ? 12 : month - 1;
+        const lastYear2 = month == 1 ? year2 - 1 : year2;
+
+        const sessionsThisMonth = await sessionFetcher.FindAllByFilter({
+            student_id: student,
+            start: new Date(
+                Date.parse(
+                    `20${lastYear2}-${lastMonth < 10 ? "0" + lastMonth : lastMonth}-01T00:00:00.000Z`,
+                ),
+            ),
+            end: new Date(
+                Date.parse(
+                    `20${year2}-${month < 10 ? "0" + month : month}-01T00:00:00.000Z`,
+                ),
+            ),
+            completed: false,
+        });
+
+        const totalThisMonthNotDone =
+            (sessionsThisMonth
+                .map((s) => s.minutes)
+                .reduce((agg, next) => agg + next, 0) *
+                3500) /
+            60;
+
+        const remainingBalance =
+            (await studentFetcher.GetBalanceOf([student])) -
+            totalThisMonthNotDone;
+        const clarifyBalanceStr =
+            remainingBalance == 0
+                ? ":"
+                : remainingBalance > 0
+                  ? `. However, you still have $${remainingBalance / 100} that hasn't been used:`
+                  : `. However, you used ${remainingBalance / -3500} hour${remainingBalance == -3500 ? "" : "s"} since the last payment that ${remainingBalance == -3500 ? "wasn't" : "weren't"} planned:`;
+        const hourModify = remainingBalance / 3500;
+
+        const sessions_string = sessions
+            .map(
+                (s) =>
+                    `${MONTHS[s.date.getMonth()]} ${s.date.getDate()} (${s.minutes / 60} hour${s.minutes == 60 ? "" : "s"})`,
+            )
+            .join("\n");
+        const total_hours =
+            sessions
+                .map((s) => s.minutes)
+                .reduce((agg, next) => agg + next, 0) / 60;
+
+        const finalHoursStr =
+            hourModify == 0
+                ? `${total_hours}`
+                : hourModify > 0
+                  ? `(${total_hours}-${hourModify})`
+                  : `(${total_hours}+${-hourModify})`;
+
+        invoice = `Hello ${parent_name}. Here's all the sessions for ${MONTHS[month - 1]}:
+
+${sessions_string}
+
+That's ${total_hours} hour${total_hours == 1 ? "" : "s"} total${clarifyBalanceStr}
+
+${finalHoursStr}×35=$${(total_hours - hourModify) * 35} due`;
     }
 </script>
 
@@ -99,6 +194,23 @@
         {/each}
     </tbody>
 </table>
+
+{#if sessions.length > 0}
+    <div class="mt-2 flex flex-col w-1/2">
+        <input
+            type="text"
+            placeholder="Parent Name"
+            class="border-b w-1/2"
+            bind:value={parent_name}
+        />
+        <button
+            class="px-2 py-1 font-bold w-1/2 mt-2 cursor-pointer"
+            onclick={generateInvoice}>Generate Invoice Text</button
+        >
+
+        <p class="whitespace-pre">{invoice}</p>
+    </div>
+{/if}
 
 <style>
     th {

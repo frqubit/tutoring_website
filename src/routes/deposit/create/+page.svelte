@@ -15,11 +15,15 @@
     </label>
     <label>
         Date
-        <input name="date" type="date" />
+        <input
+            name="date"
+            type="date"
+            value={new Date().toISOString().split("T")[0]}
+        />
     </label>
     <label>
         Cents
         <input name="cents" type="text" />
     </label>
-    <button class="bg-blue-900 text-white">Add</button>
+    <button type="submit" class="bg-blue-900 text-white">Add</button>
 </form>
