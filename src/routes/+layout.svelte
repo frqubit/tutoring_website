@@ -13,8 +13,8 @@
         <a href="/student" class="text-blue-700 text-xl font-semibold"
             >Students</a
         >
-        <a href="/session" class="text-blue-700 text-xl font-semibold"
-            >Sessions</a
+        <a href="/calendar" class="text-blue-700 text-xl font-semibold"
+            >Calendar</a
         >
 
         {#if !data.signed_in}
