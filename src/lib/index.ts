@@ -42,3 +42,32 @@ export const send_cookie_fetch: typeof fetch = (url, settings) => {
     credentials: "include",
   });
 };
+
+export function toLocalISOString(date: Date) {
+  const pad = (n: number) => n.toString().padStart(2, "0");
+
+  // Get timezone offset in minutes and convert to +/-HH:mm
+  const tzo = -date.getTimezoneOffset();
+  const dif = tzo >= 0 ? "+" : "-";
+  const offset = `${dif}${pad(Math.floor(Math.abs(tzo) / 60))}:${pad(Math.abs(tzo) % 60)}`;
+
+  return (
+    date.getFullYear() +
+    "-" +
+    pad(date.getMonth() + 1) +
+    "-" +
+    pad(date.getDate()) +
+    "T" +
+    pad(date.getHours()) +
+    ":" +
+    pad(date.getMinutes()) +
+    ":" +
+    pad(date.getSeconds()) +
+    offset
+  );
+}
+
+export const MS_PER_MINUTE = 1000 * 60;
+export const MS_PER_HOUR = MS_PER_MINUTE * 60;
+export const MS_PER_DAY = MS_PER_HOUR * 24;
+export const MS_PER_WEEK = MS_PER_DAY * 7;

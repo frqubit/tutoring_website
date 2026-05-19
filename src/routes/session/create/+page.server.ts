@@ -1,6 +1,6 @@
 import type { Actions, PageServerLoad } from "./$types";
 import { SessionFetcher, StudentFetcher } from "$lib/fetchers";
-import { BACKEND_DOMAIN } from "$lib";
+import { BACKEND_DOMAIN, toLocalISOString } from "$lib";
 
 export const load: PageServerLoad = async ({ fetch, url }) => {
   const studentFetcher = StudentFetcher(fetch, url);
@@ -35,10 +35,10 @@ export const actions: Actions = {
     const response = await sessionFetcher.Create(
       {
         student_id: +student_id,
-        date: new Date(date),
+        date: new Date(Date.parse(toLocalISOString(new Date(date)))),
         minutes: +minutes,
         every: +every,
-        occurrences: +every == 0 ? 0 : 1,
+        ends: undefined,
       },
       [],
     );

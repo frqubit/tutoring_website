@@ -98,6 +98,8 @@
                         <th>Date</th>
                         <th>Hours</th>
                         <th></th>
+                        <th></th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -110,14 +112,30 @@
                                 ></td
                             >
                             <td>{session.minutes / 60}</td>
-                            <td class="px-8">
+                            <td class="pl-8">
                                 {#if i == 0}
                                     <a
                                         href={`/utils/student/${params.id}/complete/${session.id}`}
                                     >
-                                        Complete
+                                        ✅
                                     </a>
+                                {:else}
+                                    <span>🗆</span>
                                 {/if}
+                            </td>
+                            <td>
+                                <a
+                                    href={`/utils/session/${session.id}/remove/${session.index}?pagestudent=1`}
+                                >
+                                    ❌
+                                </a>
+                            </td>
+                            <td class="pr-8">
+                                <a
+                                    href={`/session/${session.id}/reschedule/${session.index}`}
+                                >
+                                    ⏱️
+                                </a>
                             </td>
                         </tr>
                     {/each}

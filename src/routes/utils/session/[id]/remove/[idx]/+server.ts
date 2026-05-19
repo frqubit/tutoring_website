@@ -5,12 +5,19 @@ import type { RequestHandler } from "./$types";
 
 export const GET: RequestHandler = async ({ fetch, params, url }) => {
   const sessionFetcher = SessionFetcher(fetch, url);
+  const pagestudent = url.searchParams.get("pagestudent");
+
+  const studentid = pagestudent
+    ? await sessionFetcher.FindOne([+params.id]).then((res) => res!.student.id)
+    : null;
+
   const result = await sessionFetcher.RemoveOneInSeries([
     +params.id,
     +params.idx,
   ]);
 
-  if (+params.idx == 0) {
+  if (studentid) throw redirect(307, `/student/${studentid}`);
+  else if (+params.idx == 0) {
     throw redirect(307, "/session");
   } else {
     throw redirect(307, `/session/${params.id}`);

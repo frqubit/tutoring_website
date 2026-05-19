@@ -1,5 +1,6 @@
 <script lang="ts">
     import type { PageData } from "./$types";
+    import CalendarTile from "$lib/components/CalendarTile.svelte";
 
     let { data } = $props();
 
@@ -57,30 +58,7 @@
             <hr class="w-full" />
 
             {#each sessions as session}
-                <div class="border-y px-1 flex flex-col w-full">
-                    <a
-                        class="font-bold text-blue-500"
-                        href={`/student/${session.student.id}`}
-                        >{session.student.name}</a
-                    >
-                    <a
-                        class="italic text-blue-500"
-                        href={`/session/${session.id}`}
-                        >{session.date.toDateString()}</a
-                    >
-                    <span
-                        >{session.date
-                            .toISOString()
-                            .split("T")[1]
-                            .split(":00.")[0]} - {new Date(
-                            session.date.getTime() +
-                                session.minutes * MS_IN_MINUTE,
-                        )
-                            .toISOString()
-                            .split("T")[1]
-                            .split(":00.")[0]}</span
-                    >
-                </div>
+                <CalendarTile {session} />
             {/each}
         </div>
     {/each}
