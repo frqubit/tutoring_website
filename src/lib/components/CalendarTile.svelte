@@ -22,8 +22,13 @@
 </script>
 
 <div class="border-y px-1 flex flex-col w-full">
-    <a class="font-bold text-blue-500" href={`/student/${session.student.id}`}
-        >{session.student.name}</a
+    <a
+        class="font-bold text-blue-500"
+        href={`/student/${session.students[0].id}`}
+        >{session.students[0].name}
+        {session.students.length > 1
+            ? `+ ${session.students.length - 1}`
+            : ""}</a
     >
     <a class="italic text-blue-500" href={`/session/${session.id}`}
         >{session.date.toDateString()}</a

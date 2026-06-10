@@ -8,7 +8,9 @@ export const GET: RequestHandler = async ({ fetch, params, url }) => {
   const pagestudent = url.searchParams.get("pagestudent");
 
   const studentid = pagestudent
-    ? await sessionFetcher.FindOne([+params.id]).then((res) => res!.student.id)
+    ? await sessionFetcher
+        .FindOne([+params.id])
+        .then((res) => res!.students[0].id)
     : null;
 
   const result = await sessionFetcher.RemoveOneInSeries([

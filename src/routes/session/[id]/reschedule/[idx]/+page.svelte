@@ -31,7 +31,12 @@
 <div class="flex flex-col">
     <div class="flex flex-row">
         Student
-        <span class="font-bold ml-2">{data.session.student.name}</span>
+        <span class="font-bold ml-2"
+            >{data.session.students[0].name}
+            {data.session.students.length > 1
+                ? `+ ${data.session.students.length - 1}`
+                : ""}</span
+        >
     </div>
     <div class="flex flex-row">
         Date

@@ -1,16 +1,54 @@
 <script lang="ts">
+    import { send_cookie_fetch } from "$lib";
+    import { StudentFetcher, SessionFetcher } from "$lib/fetchers";
     import type { PageProps } from "./$types";
 
     let { data, params }: PageProps = $props();
+
+    let adding_student = $state(false);
+    let selected_student: number = $state(0);
+    let other_students_options: [number, string][] = $state([]);
+
+    async function get_other_students() {
+        let studentFetcher = StudentFetcher(
+            send_cookie_fetch,
+            URL.parse(window.location.href)!,
+        );
+
+        const allStudents = await studentFetcher.FindAll(undefined);
+        other_students_options = allStudents
+            .filter(
+                (s) =>
+                    s.active &&
+                    data.session?.students.find((s2) => s2.name == s.name) ==
+                        undefined,
+            )
+            .map((s) => [s.id, s.name]);
+
+        selected_student = other_students_options[0][0];
+    }
+
+    async function add_student() {
+        let sessionFetcher = SessionFetcher(
+            send_cookie_fetch,
+            URL.parse(window.location.href)!,
+        );
+
+        console.log(selected_student);
+
+        await sessionFetcher.AddStudentToSession([
+            data.session!.id,
+            selected_student,
+        ]);
+
+        location.reload();
+    }
 </script>
 
 {#if data.session}
     <div class="flex flex-row w-full items-center">
         <h1 class="font-bold text-3xl">
-            <a
-                href={`/student/${data.session.student.id}`}
-                class="text-blue-700">{data.session.student.name}</a
-            >
+            {data.session.date.toLocaleString()}
             ({data.session.minutes} minutes)
         </h1>
         <form method="POST" action="?/delete" class="ml-auto">
@@ -19,16 +57,44 @@
     </div>
     <hr />
     <div class="flex flex-col">
-        <span>
-            {data.session.completed ? "Completed on" : "Scheduled for"}
-            {data.session.date.toLocaleString()}
-        </span>
+        {#if data.session.completed}
+            <span> Completed </span>
+        {/if}
         {#if data.session.every != 0}
             <span>
                 Weekly {data.session.ends
                     ? `until ${data.session.ends.toDateString()}`
                     : ""}
             </span>
+        {/if}
+
+        <h2 class="mt-4 mb-2 text-xl font-bold">
+            Students
+            <button
+                class={`${adding_student ? "text-red-500" : ""}`}
+                onclick={async () => {
+                    await get_other_students();
+                    adding_student = !adding_student;
+                }}>+</button
+            >
+        </h2>
+        {#each data.session.students as student}
+            <a href={`/student/${student.id}`} class="text-blue-700"
+                >{student.name}</a
+            >
+        {/each}
+
+        {#if adding_student}
+            <div class="flex flex-row">
+                <select bind:value={selected_student} class="w-[30ch]">
+                    {#each other_students_options as other_student}
+                        <option value={other_student[0]}
+                            >{other_student[1]}</option
+                        >
+                    {/each}
+                </select>
+                <button class="ml-2" onclick={add_student}>Save</button>
+            </div>
         {/if}
 
         {#if data.future_dates}

@@ -19,7 +19,10 @@
             <tr>
                 <td
                     ><a href={`/session/${session.id}`} class="text-blue-700"
-                        >{session.student.name}</a
+                        >{session.students[0].name}
+                        {session.students.length > 1
+                            ? `+ ${session.students.length - 1}`
+                            : ""}</a
                     ></td
                 >
                 <td>{session.date}</td>

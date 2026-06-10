@@ -91,7 +91,7 @@
 
         const totalThisMonthNotDone =
             (sessionsThisMonth
-                .map((s) => s.minutes)
+                .map((s) => s.minutes / s.students.length)
                 .reduce((agg, next) => agg + next, 0) *
                 3500) /
             60;
@@ -99,24 +99,31 @@
         const remainingBalance =
             (await studentFetcher.GetBalanceOf([student])) -
             totalThisMonthNotDone;
+
+        const sessions_string = sessions
+            .map((s) => {
+                const shared = s.students.length > 1 ? " [Shared]" : "";
+                return `${MONTHS[s.date.getMonth()]} ${s.date.getDate()} (${s.minutes / 60} hour${s.minutes == 60 ? "" : "s"})${shared}`;
+            })
+            .join("\n");
+        // Tracks THEIR share, not the total being done
+        const total_shared_hours_paying =
+            sessions
+                .filter((s) => s.students.length > 1)
+                .map((s) => s.minutes / s.students.length)
+                .reduce((agg, next) => agg + next, 0) / 60;
+        const total_hours =
+            sessions
+                .map((s) => s.minutes / s.students.length)
+                .reduce((agg, next) => agg + next, 0) / 60;
+
         const clarifyBalanceStr =
             remainingBalance == 0
                 ? ":"
                 : remainingBalance > 0
-                  ? `. However, you still have $${remainingBalance / 100} that hasn't been used:`
+                  ? `. However, you still have $${remainingBalance / 100} that hasn't been used${remainingBalance / 3500 >= total_hours ? `, which is enough to cover this month. You don't owe anything for ${MONTHS[month - 1]}. Have a good day!` : ":"}`
                   : `. However, you used ${remainingBalance / -3500} hour${remainingBalance == -3500 ? "" : "s"} since the last payment that ${remainingBalance == -3500 ? "wasn't" : "weren't"} planned:`;
         const hourModify = remainingBalance / 3500;
-
-        const sessions_string = sessions
-            .map(
-                (s) =>
-                    `${MONTHS[s.date.getMonth()]} ${s.date.getDate()} (${s.minutes / 60} hour${s.minutes == 60 ? "" : "s"})`,
-            )
-            .join("\n");
-        const total_hours =
-            sessions
-                .map((s) => s.minutes)
-                .reduce((agg, next) => agg + next, 0) / 60;
 
         const finalHoursStr =
             hourModify == 0
@@ -125,13 +132,25 @@
                   ? `(${total_hours}-${hourModify})`
                   : `(${total_hours}+${-hourModify})`;
 
+        const clarifySharedHoursStr =
+            total_shared_hours_paying > 0 &&
+            total_hours != total_shared_hours_paying
+                ? `, ${total_hours - total_shared_hours_paying} for 1-on-1 sessions and ${total_shared_hours_paying} as your share of all sessions done as a group`
+                : "";
+
+        const amountDue = (total_hours - hourModify) * 35;
+        const amountDuePadded =
+            (amountDue * 100) % 10 == 0 && amountDue % 1 != 0
+                ? amountDue + "0"
+                : "" + amountDue;
+
         invoice = `Hello ${parent_name}. Here's all the sessions for ${MONTHS[month - 1]}:
 
 ${sessions_string}
 
-That's ${total_hours} hour${total_hours == 1 ? "" : "s"} total${clarifyBalanceStr}
+That's ${total_hours} hour${total_hours == 1 ? "" : "s"} total${clarifySharedHoursStr}${clarifyBalanceStr}
 
-${finalHoursStr}×35=$${(total_hours - hourModify) * 35} due`;
+${total_hours - hourModify > 0 ? `${finalHoursStr}×35=$${amountDuePadded} due` : ""}`;
     }
 </script>
 
@@ -185,7 +204,10 @@ ${finalHoursStr}×35=$${(total_hours - hourModify) * 35} due`;
             <tr>
                 <td
                     ><a href={`/session/${session.id}`} class="text-blue-700"
-                        >{session.student.name}</a
+                        >{data.students.find((s) => s.id == student)!.name}
+                        {session.students.length > 1
+                            ? `+ ${session.students.length - 1}`
+                            : ""}</a
                     ></td
                 >
                 <td>{session.date}</td>
@@ -208,7 +230,7 @@ ${finalHoursStr}×35=$${(total_hours - hourModify) * 35} due`;
             onclick={generateInvoice}>Generate Invoice Text</button
         >
 
-        <p class="whitespace-pre">{invoice}</p>
+        <p class="whitespace-pre w-1/2">{invoice}</p>
     </div>
 {/if}
 
