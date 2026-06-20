@@ -34,14 +34,30 @@
             URL.parse(window.location.href)!,
         );
 
-        console.log(selected_student);
-
         await sessionFetcher.AddStudentToSession([
             data.session!.id,
             selected_student,
         ]);
 
         location.reload();
+    }
+
+    async function remove_student(student_id: number) {
+        let sessionFetcher = SessionFetcher(
+            send_cookie_fetch,
+            URL.parse(window.location.href)!,
+        );
+
+        const resp = await sessionFetcher.RemoveStudentFromSession([
+            data.session!.id,
+            student_id,
+        ]);
+
+        if (resp && "error" in resp) {
+            console.log(resp.message);
+        } else {
+            location.reload();
+        }
     }
 </script>
 
@@ -79,9 +95,17 @@
             >
         </h2>
         {#each data.session.students as student}
-            <a href={`/student/${student.id}`} class="text-blue-700"
-                >{student.name}</a
+            <div
+                class="inline-flex flex-row items-center justify-start not-last:mb-2"
             >
+                <button
+                    class="bg-red-500 hover:bg-red-400 active:bg-red-500 text-white mr-2 border px-2 font-bold"
+                    onclick={() => remove_student(student.id)}>x</button
+                >
+                <a href={`/student/${student.id}`} class="text-blue-700"
+                    >{student.name}</a
+                >
+            </div>
         {/each}
 
         {#if adding_student}

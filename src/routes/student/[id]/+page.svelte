@@ -12,9 +12,10 @@
     function get_completed_session_total() {
         return (
             safe_div(
-                data.completed_sessions
-                    ?.map((v) => v.minutes)
-                    .reduce((acc, cur) => acc + cur, 0),
+                data.completed_sessions?.reduce(
+                    (acc, cur) => acc + cur.minutes / cur.students.length,
+                    0,
+                ),
                 60,
             ) || 0
         );
@@ -162,7 +163,10 @@
                                     class="text-blue-700">{session.date}</a
                                 ></td
                             >
-                            <td>{session.minutes / 60}</td>
+                            <td
+                                >{session.minutes /
+                                    (60 * session.students.length)}</td
+                            >
                         </tr>
                     {/each}
 
