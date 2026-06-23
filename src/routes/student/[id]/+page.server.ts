@@ -22,15 +22,9 @@ async function find_sessions_and_deposits(
 
   if (!deposits) return null;
 
-  const completed_sessions = await session_fetcher.FindAllByFilter(
-    {
-      student_id: id,
-      start: undefined,
-      end: undefined,
-      completed: true,
-    },
-    [],
-  );
+  const completed_sessions = await student_fetcher.FindAllCompletedSessionsOf([
+    id,
+  ]);
 
   if (!completed_sessions) return null;
 
