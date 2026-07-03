@@ -4,26 +4,26 @@
     let { data }: PageProps = $props();
 </script>
 
-<a href="/deposit/create" class="text-blue-700">Create</a>
+<a href="/client/create" class="text-blue-700">Create</a>
 
 <table class="border-3 w-1/2">
     <thead>
         <tr>
             <th>Name</th>
-            <th>Date</th>
-            <th>Amount</th>
+            <th>Active</th>
         </tr>
     </thead>
     <tbody>
-        {#each data.deposits as deposit}
+        {#each data.clients as client}
             <tr>
                 <td
-                    ><a href={`/deposit/${deposit.id}`} class="text-blue-700"
-                        >{deposit.client.name}</a
+                    ><a href={`/client/${client.id}`} class="text-blue-700"
+                        >{client.name}</a
                     ></td
                 >
-                <td>{deposit.date}</td>
-                <td>${deposit.cents / 100}</td>
+                <td class={client.active ? "text-green-600" : "text-red-600"}
+                    >{client.active}</td
+                >
             </tr>
         {/each}
     </tbody>

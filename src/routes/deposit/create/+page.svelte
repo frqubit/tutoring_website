@@ -6,10 +6,10 @@
 
 <form method="POST" class="flex flex-col">
     <label>
-        Student
-        <select name="student_id">
-            {#each data.students as student}
-                <option value={student.id}>{student.name}</option>
+        Client
+        <select name="client_id">
+            {#each data.clients as client}
+                <option value={client.id}>{client.name}</option>
             {/each}
         </select>
     </label>

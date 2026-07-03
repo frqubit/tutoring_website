@@ -7,13 +7,5 @@
         Active
         <input name="active" type="checkbox" />
     </label>
-    <label>
-        Client
-        <select name="client_id">
-            {#each data.clients as client}
-                <option value={client.id}>{client.name}</option>
-            {/each}
-        </select>
-    </label>
     <button>Add</button>
 </form>

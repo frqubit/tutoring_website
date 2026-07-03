@@ -20,18 +20,29 @@
             ) || 0
         );
     }
+
+    function get_deposit_total() {
+        return (
+            safe_div(
+                data.deposits
+                    ?.map((v) => v.cents)
+                    .reduce((acc, cur) => acc + cur, 0),
+                100,
+            ) || 0
+        );
+    }
 </script>
 
-{#if data.student}
+{#if data.client && data.deposits}
     <div class="flex flex-row w-full items-center">
         <h1 class="font-bold text-3xl">
-            {data.student.name} ({data.student.active ? "active" : "inactive"})
+            {data.client.name} ({data.client.active ? "active" : "inactive"})
         </h1>
 
         <div class="flex flex-row gap-x-6 ml-auto">
             <form method="POST" action="?/toggleActive" class="ml-auto">
                 <button
-                    >{data.student.active
+                    >{data.client.active
                         ? "Set inactive"
                         : "Set active"}</button
                 >
@@ -44,13 +55,42 @@
     </div>
     <hr />
 
-    <h2 class="mt-4 mb-2 text-xl font-bold">Client</h2>
-    <a href={`/client/${data.student.client.id}`} class="text-blue-700"
-        >{data.student.client.name}</a
-    >
+    <h2 class="mt-4 mb-2 text-xl">
+        Balance: ${get_deposit_total() - get_completed_session_total() * 35} ({get_deposit_total() /
+            35 -
+            get_completed_session_total()} hours)
+    </h2>
 
     <div class="flex flex-row items-start justify-start gap-x-4">
         <div class="w-1/2">
+            <h2 class="mt-4 mb-2 text-xl font-bold">Deposits</h2>
+
+            <table class="border-3 w-full">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {#each data.deposits as deposit}
+                        <tr>
+                            <td
+                                ><a
+                                    href={`/deposit/${deposit.id}`}
+                                    class="text-blue-700">{deposit.date}</a
+                                ></td
+                            >
+                            <td>${deposit.cents / 100}</td>
+                        </tr>
+                    {/each}
+
+                    <tr class="border-t-1">
+                        <td>Total</td>
+                        <td>${get_deposit_total()}</td>
+                    </tr>
+                </tbody>
+            </table>
             <h2 class="mt-4 mb-2 text-xl font-bold">Future Sessions</h2>
 
             <table class="border-3 w-full">

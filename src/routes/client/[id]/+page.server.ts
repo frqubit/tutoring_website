@@ -1,5 +1,5 @@
 import type { Actions, PageServerLoad } from "./$types";
-import { SessionFetcher, StudentFetcher } from "$lib/fetchers";
+import { SessionFetcher, ClientFetcher } from "$lib/fetchers";
 import { BACKEND_DOMAIN } from "$lib";
 import { redirect } from "@sveltejs/kit";
 
@@ -14,11 +14,15 @@ import { redirect } from "@sveltejs/kit";
 // }
 
 async function find_sessions_and_deposits(
-  student_fetcher: ReturnType<typeof StudentFetcher>,
+  client_fetcher: ReturnType<typeof ClientFetcher>,
   session_fetcher: ReturnType<typeof SessionFetcher>,
   id: number,
 ) {
-  const completed_sessions = await student_fetcher.FindAllCompletedSessionsOf([
+  const deposits = await client_fetcher.FindAllDepositsOf([id]);
+
+  if (!deposits) return null;
+
+  const completed_sessions = await client_fetcher.FindAllCompletedSessionsOf([
     id,
   ]);
 
@@ -26,8 +30,8 @@ async function find_sessions_and_deposits(
 
   const future_sessions = await session_fetcher.FindAllByFilter(
     {
-      student_id: id,
-      client_id: undefined,
+      student_id: undefined,
+      client_id: id,
       start: undefined,
       end: undefined,
       completed: false,
@@ -38,41 +42,42 @@ async function find_sessions_and_deposits(
   if (!future_sessions) return null;
 
   return {
+    deposits,
     completed_sessions,
     future_sessions,
   };
 }
 
 export const load: PageServerLoad = async ({ fetch, params, url }) => {
-  const studentFetcher = StudentFetcher(fetch, url);
+  const clientFetcher = ClientFetcher(fetch, url);
   const sessionFetcher = SessionFetcher(fetch, url);
-  const student = await studentFetcher.FindOne([+params.id]);
+  const client = await clientFetcher.FindOne([+params.id]);
 
-  if (!student) {
-    return { student };
+  if (!client) {
+    return { client };
   }
 
   const sessions_and_deposits = await find_sessions_and_deposits(
-    studentFetcher,
+    clientFetcher,
     sessionFetcher,
     +params.id,
   );
 
-  return { student, ...sessions_and_deposits };
+  return { client, ...sessions_and_deposits };
 };
 
 export const actions: Actions = {
   delete: async ({ fetch, params, url }) => {
-    const studentFetcher = StudentFetcher(fetch, url);
+    const clientFetcher = ClientFetcher(fetch, url);
 
-    await studentFetcher.Remove([+params.id]);
+    await clientFetcher.Remove([+params.id]);
 
     throw redirect(303, "/student");
   },
   toggleActive: async ({ fetch, params, url }) => {
-    const studentFetcher = StudentFetcher(fetch, url);
+    const clientFetcher = ClientFetcher(fetch, url);
 
-    await studentFetcher.ToggleActive([+params.id]);
+    await clientFetcher.ToggleActive([+params.id]);
 
     throw redirect(303, `/student/${params.id}`);
   },

@@ -7,9 +7,8 @@
 {#if data.deposit}
     <div class="flex flex-row w-full items-center">
         <h1 class="font-bold text-3xl">
-            <a
-                href={`/student/${data.deposit.student.id}`}
-                class="text-blue-700">{data.deposit.student.name}</a
+            <a href={`/client/${data.deposit.client.id}`} class="text-blue-700"
+                >{data.deposit.client.name}</a
             >
             (${data.deposit.cents / 100})
         </h1>
