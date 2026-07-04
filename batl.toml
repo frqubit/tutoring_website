@@ -6,11 +6,12 @@ name = "frqubit.tutoring.website"
 version = "0.1.0"
 
 [scripts]
-dev = "concurrently 'batl frqubit.tutoring.backend:dev' 'pnpm dev'"
 reload_db = "batl frqubit.tutoring.database:reload_db"
+dev = "concurrently 'batl frqubit.tutoring.backend:dev' 'pnpm dev'"
 
 [dependencies]
 "frqubit.tutoring.backend" = "0.1.0"
+"battalion.source.github" = "0.1.0"
 
 [links]
 "frqubit.tutoring.backend/src/utils" = "src/lib/backend/utils"
@@ -18,3 +19,7 @@ reload_db = "batl frqubit.tutoring.database:reload_db"
 
 [restrict.Unix]
 include = "require"
+
+[[sources]]
+handler = "battalion.source.github"
+repository = "frqubit/tutoring_website"

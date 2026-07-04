@@ -5,19 +5,28 @@ version = "0.1.0"
 version = "0.3.0"
 
 [[dependencies]]
+name = "battalion.source.github"
+version = "0.1.0"
+hashid = "3EE9565DAAB8FF8945BA0494EAE16BE52CF0ED563F0B2A2824868D84DEB1799C"
+
+[[dependencies.sources]]
+handler = "battalion.source.tar"
+url = "https://batl-public-295921714505-us-east-1-an.s3.us-east-1.amazonaws.com/battalion_source_github.tar"
+
+[[dependencies]]
 name = "frqubit.tutoring.backend"
 version = "0.1.0"
-hashid = "040D5CDD580110DDB22403007FD8E5FCBE50B0370E69D1A7ED040740312A4747"
-sources = []
+hashid = "6D225905F495A2AF3E5774BCADC6F9420252C64FF1AA79AA3F959C581AE7D28C"
+
+[[dependencies.sources]]
+handler = "battalion.source.github"
+repository = "frqubit/tutoring_backend"
 
 [[dependencies]]
 name = "frqubit.tutoring.database"
 version = "0.1.0"
-hashid = "9618E381D77FE5DE7D9A48038B63F55E440D4E5201CD644C0B7215D7FC3BE849"
-sources = []
+hashid = "CAA77BCED5884A1C1C510ABBB8E8110AFDCF656FD21902764B91DFF7C9DF6779"
 
-[[dependencies]]
-name = "frqubit.tutoring.database.old_data"
-version = "0.1.0"
-hashid = "477EE91F82A837537C21345B049C2BFCE878EF94C668461BE253D490C4B93D65"
-sources = []
+[[dependencies.sources]]
+handler = "battalion.source.github"
+repository = "frqubit/tutoring_database"
