@@ -1,7 +1,26 @@
 <script lang="ts">
+    import { send_cookie_fetch } from "$lib";
+    import { ClientFetcher } from "$lib/fetchers";
     import type { PageProps } from "./$types";
 
     let { data, params }: PageProps = $props();
+
+    let renaming = $state(false);
+    let new_name = $state(data.client!.name);
+
+    async function save_rename() {
+        const clientFetcher = ClientFetcher(
+            send_cookie_fetch,
+            URL.parse(window.location.href)!,
+        );
+
+        let output = await clientFetcher.Rename(new_name, [data.client!.id]);
+        if (output !== null) {
+            console.log(output.message);
+        } else {
+            window.location.reload();
+        }
+    }
 
     function safe_div(a: number | undefined, b: number): number | undefined {
         if (a === undefined) return undefined;
@@ -35,11 +54,34 @@
 
 {#if data.client && data.deposits}
     <div class="flex flex-row w-full items-center">
-        <h1 class="font-bold text-3xl">
-            {data.client.name} ({data.client.active ? "active" : "inactive"})
-        </h1>
+        {#if renaming}
+            <input
+                type="text"
+                class="font-bold text-3xl w-1/2"
+                bind:value={new_name}
+            />
+        {:else}
+            <h1 class="font-bold text-3xl">
+                {data.client.name} ({data.client.active
+                    ? "active"
+                    : "inactive"})
+            </h1>
+        {/if}
 
         <div class="flex flex-row gap-x-6 ml-auto">
+            <button
+                onclick={async () => {
+                    if (renaming && data.client.name != new_name)
+                        await save_rename();
+                    else renaming = !renaming;
+                }}
+                >{renaming
+                    ? data.client.name == new_name
+                        ? "Cancel"
+                        : "Save"
+                    : "Rename"}</button
+            >
+
             <form method="POST" action="?/toggleActive" class="ml-auto">
                 <button
                     >{data.client.active
