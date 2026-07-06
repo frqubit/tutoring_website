@@ -4,7 +4,7 @@ import { StudentFetcher as StudentFetcherInternal } from "./backend/modules/stud
 import { ClientFetcher as ClientFetcherInternal } from "./backend/modules/client/Client.handlers";
 import { SessionFetcher as SessionFetcherInternal } from "./backend/modules/session/Session.handlers";
 export type { FetcherOutput } from "./backend/utils/handler_utils";
-import { BACKEND_DOMAIN, SIGNIN_URL } from "$lib";
+import { BACKEND_DOMAIN, send_cookie_fetch, SIGNIN_URL } from "$lib";
 
 export const DepositFetcher = (fetch_: typeof fetch, loading_url: URL) =>
   DepositFetcherInternal({
@@ -37,3 +37,9 @@ export const SessionFetcher = (fetch_: typeof fetch, loading_url: URL) =>
     fetch: fetch_,
     domain: BACKEND_DOMAIN,
   });
+
+type FetcherMaker<T> = (fetch_: typeof fetch, loading_url: URL) => T;
+
+export function FetcherWithDefaultClientSettings<T>(f: FetcherMaker<T>): T {
+  return f(send_cookie_fetch, URL.parse(window.location.href)!);
+}

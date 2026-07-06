@@ -69,18 +69,21 @@
         {/if}
 
         <div class="flex flex-row gap-x-6 ml-auto">
-            <button
-                onclick={async () => {
-                    if (renaming && data.client.name != new_name)
-                        await save_rename();
-                    else renaming = !renaming;
-                }}
-                >{renaming
-                    ? data.client.name == new_name
-                        ? "Cancel"
-                        : "Save"
-                    : "Rename"}</button
-            >
+            {#if data.client.active}
+                <a href={`/client/${params.id}/merge`}>Merge</a>
+                <button
+                    onclick={async () => {
+                        if (renaming && data.client.name != new_name)
+                            await save_rename();
+                        else renaming = !renaming;
+                    }}
+                    >{renaming
+                        ? data.client.name == new_name
+                            ? "Cancel"
+                            : "Save"
+                        : "Rename"}
+                </button>
+            {/if}
 
             <form method="POST" action="?/toggleActive" class="ml-auto">
                 <button

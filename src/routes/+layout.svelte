@@ -14,6 +14,8 @@
         <a href="/student" class="text-blue-700 text-xl font-semibold"
             >Students</a
         >
+        <a href="/client" class="text-blue-700 text-xl font-semibold">Clients</a
+        >
         <a href="/calendar" class="text-blue-700 text-xl font-semibold"
             >Calendar</a
         >
