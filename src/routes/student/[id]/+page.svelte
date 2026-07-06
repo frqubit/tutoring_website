@@ -1,7 +1,25 @@
 <script lang="ts">
+    import {
+        FetcherWithDefaultClientSettings,
+        StudentFetcher,
+    } from "$lib/fetchers";
     import type { PageProps } from "./$types";
 
     let { data, params }: PageProps = $props();
+
+    let renaming = $state(false);
+    let new_name = $state(data.student!.name);
+
+    async function save_rename() {
+        const studentFetcher = FetcherWithDefaultClientSettings(StudentFetcher);
+
+        let output = await studentFetcher.Rename(new_name, [data.student!.id]);
+        if (output !== null) {
+            console.log(output.message);
+        } else {
+            window.location.reload();
+        }
+    }
 
     function safe_div(a: number | undefined, b: number): number | undefined {
         if (a === undefined) return undefined;
@@ -20,22 +38,50 @@
             ) || 0
         );
     }
+
+    async function toggle_active() {
+        const studentFetcher = FetcherWithDefaultClientSettings(StudentFetcher);
+        await studentFetcher.ToggleActive([data.student!.id]);
+
+        window.location.reload();
+    }
 </script>
 
 {#if data.student}
     <div class="flex flex-row w-full items-center">
-        <h1 class="font-bold text-3xl">
-            {data.student.name} ({data.student.active ? "active" : "inactive"})
-        </h1>
+        {#if renaming}
+            <input
+                type="text"
+                class="font-bold text-3xl w-1/2"
+                bind:value={new_name}
+            />
+        {:else}
+            <h1
+                class={`font-bold text-3xl ${!data.student.active && "text-red-800"}`}
+            >
+                {data.student.name}
+            </h1>
+        {/if}
 
         <div class="flex flex-row gap-x-6 ml-auto">
-            <form method="POST" action="?/toggleActive" class="ml-auto">
+            {#if data.student.active}
                 <button
-                    >{data.student.active
-                        ? "Set inactive"
-                        : "Set active"}</button
-                >
-            </form>
+                    onclick={async () => {
+                        if (renaming && data.student.name != new_name)
+                            await save_rename();
+                        else renaming = !renaming;
+                    }}
+                    >{renaming
+                        ? data.student.name == new_name
+                            ? "Cancel"
+                            : "Save"
+                        : "Rename"}
+                </button>
+            {/if}
+
+            <button class="ml-auto" onclick={toggle_active}
+                >{data.student.active ? "Set inactive" : "Set active"}</button
+            >
 
             <form method="POST" action="?/delete" class="ml-auto">
                 <button class="text-red-700">Delete</button>
