@@ -7,6 +7,7 @@ version = "0.1.0"
 
 [scripts]
 reload_db = "batl frqubit.tutoring.database:reload_db"
+reload_live_db = "batl frqubit.tutoring.database:reload_live_db"
 dev = "concurrently 'batl frqubit.tutoring.backend:dev' 'pnpm dev'"
 
 [dependencies]
