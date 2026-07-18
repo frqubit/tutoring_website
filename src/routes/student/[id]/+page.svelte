@@ -161,7 +161,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {#each data.completed_sessions as session}
+                    {#each data.completed_sessions?.toSorted((a,b)=>a.date.getTime()-b.date.getTime()) as session}
                         <tr>
                             <td
                                 ><a

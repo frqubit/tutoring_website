@@ -13,7 +13,7 @@ import { redirect } from "@sveltejs/kit";
 //   deposits: Awaited<ReturnType<StudentFetcher["findAllDepositsOf"]>>;
 // }
 
-async function find_sessions_and_deposits(
+async function find_sessions(
   student_fetcher: ReturnType<typeof StudentFetcher>,
   session_fetcher: ReturnType<typeof SessionFetcher>,
   id: number,
@@ -52,7 +52,7 @@ export const load: PageServerLoad = async ({ fetch, params, url }) => {
     return { student };
   }
 
-  const sessions_and_deposits = await find_sessions_and_deposits(
+  const sessions_and_deposits = await find_sessions(
     studentFetcher,
     sessionFetcher,
     +params.id,
