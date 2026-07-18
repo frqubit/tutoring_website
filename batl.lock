@@ -16,7 +16,7 @@ url = "https://batl-public-295921714505-us-east-1-an.s3.us-east-1.amazonaws.com/
 [[dependencies]]
 name = "frqubit.tutoring.backend"
 version = "0.1.0"
-hashid = "A68CB0862645E9EB328D62A79CA50C1EABD531DAD4C8C5E1BBE0B697450C2178"
+hashid = "BA7A7487C9E31A72EFE7A4E72F6A2FF7961B421D173FE1A2DF8A645F5BF0A38A"
 
 [[dependencies.sources]]
 handler = "battalion.source.github"
@@ -25,7 +25,7 @@ repository = "frqubit/tutoring_backend"
 [[dependencies]]
 name = "frqubit.tutoring.database"
 version = "0.1.0"
-hashid = "A096D635CCAFB48593E63F89E2712647F99A2B4FC2E04BA201F3E8055CE90206"
+hashid = "3D27A1D01719C3F9D57AF56C024591142971EEDBCCDADBC0CBFB5039466823D7"
 
 [[dependencies.sources]]
 handler = "battalion.source.github"

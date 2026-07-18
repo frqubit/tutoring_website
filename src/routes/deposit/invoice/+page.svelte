@@ -2,7 +2,7 @@
     import type { PageProps } from "./$types";
     import {
         SessionFetcher,
-        StudentFetcher,
+        ClientFetcher,
         type FetcherOutput,
     } from "$lib/fetchers";
     import { send_cookie_fetch } from "$lib";
@@ -24,7 +24,7 @@
 
     let { data }: PageProps = $props();
 
-    let student = $state(data.students[0].id);
+    let client = $state(data.clients[0].id);
     let month = $state((new Date().getMonth() + 2) % 12);
     let year2 = $state(new Date().getFullYear() % 100);
 
@@ -41,7 +41,7 @@
         const nextYear2 = month == 12 ? year2 + 1 : year2;
 
         const result = await fetcher.FindAllByFilter({
-            student_id: student,
+            client_id: client,
             start: new Date(
                 Date.parse(
                     `20${year2}-${month < 10 ? "0" + month : month}-01T00:00:00.000Z`,
@@ -53,6 +53,7 @@
                 ),
             ),
             completed: false,
+            student_id: undefined
         });
 
         sessions = result;
@@ -62,7 +63,7 @@
     let invoice: string = $state("");
 
     async function generateInvoice() {
-        const studentFetcher = StudentFetcher(
+        const clientFetcher = ClientFetcher(
             send_cookie_fetch,
             URL.parse(window.location.href)!,
         );
@@ -75,7 +76,7 @@
         const lastYear2 = month == 1 ? year2 - 1 : year2;
 
         const sessionsThisMonth = await sessionFetcher.FindAllByFilter({
-            student_id: student,
+            client_id: client,
             start: new Date(
                 Date.parse(
                     `20${lastYear2}-${lastMonth < 10 ? "0" + lastMonth : lastMonth}-01T00:00:00.000Z`,
@@ -87,6 +88,7 @@
                 ),
             ),
             completed: false,
+            student_id: undefined
         });
 
         const totalThisMonthNotDone =
@@ -97,7 +99,7 @@
             60;
 
         const remainingBalance =
-            (await studentFetcher.GetBalanceOf([student])) -
+            (await clientFetcher.GetBalanceOf([client])) -
             totalThisMonthNotDone;
 
         const sessions_string = sessions
@@ -157,9 +159,9 @@ ${total_hours - hourModify > 0 ? `${finalHoursStr}×35=$${amountDuePadded} due` 
 <div class="flex flex-col justify-start">
     <div class="flex flex-row">
         <span class="mr-4">Student</span>
-        <select bind:value={student}>
-            {#each data.students as student}
-                <option value={student.id}>{student.name}</option>
+        <select bind:value={client}>
+            {#each data.clients as client}
+                <option value={client.id}>{client.name}</option>
             {/each}
         </select>
     </div>
@@ -204,7 +206,7 @@ ${total_hours - hourModify > 0 ? `${finalHoursStr}×35=$${amountDuePadded} due` 
             <tr>
                 <td
                     ><a href={`/session/${session.id}`} class="text-blue-700"
-                        >{data.students.find((s) => s.id == student)!.name}
+                        >{session.students.find((s) => s.client.id == client)!.name}
                         {session.students.length > 1
                             ? `+ ${session.students.length - 1}`
                             : ""}</a

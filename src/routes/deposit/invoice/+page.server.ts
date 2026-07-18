@@ -1,13 +1,13 @@
-import { StudentFetcher } from "$lib/fetchers";
+import { ClientFetcher } from "$lib/fetchers";
 import type { PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async ({ fetch, url }) => {
-  const studentFetcher = StudentFetcher(fetch, url);
-  const students = await studentFetcher
+  const clientFetcher = ClientFetcher(fetch, url);
+  const clients = await clientFetcher
     .FindAll([])
-    .then((data) => data.filter((s) => s.active));
+    .then((data) => data.filter((c) => c.active));
 
   return {
-    students,
+    clients,
   };
 };

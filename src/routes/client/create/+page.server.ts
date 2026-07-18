@@ -1,10 +1,10 @@
 import type { Actions } from "./$types";
-import { StudentFetcher } from "$lib/fetchers";
+import { ClientFetcher } from "$lib/fetchers";
 import { BACKEND_DOMAIN } from "$lib";
 
 export const actions: Actions = {
   default: async ({ request, fetch, url }) => {
-    const studentFetcher = StudentFetcher(fetch, url);
+    const clientFetcher = ClientFetcher(fetch, url);
 
     const data = await request.formData();
     const name = data.get("name") as string;
@@ -14,7 +14,7 @@ export const actions: Actions = {
       return;
     }
 
-    const response = await studentFetcher.Create(
+    const response = await clientFetcher.Create(
       {
         name,
         active,
