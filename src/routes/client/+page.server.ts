@@ -4,7 +4,7 @@ import { BACKEND_DOMAIN } from "$lib";
 
 export const load: PageServerLoad = async ({ fetch, url }) => {
   const clientFetcher = ClientFetcher(fetch, url);
-  const clients = await clientFetcher.FindAll([]);
+  const clients = await clientFetcher.FindAll({});
 
   return { clients };
 };

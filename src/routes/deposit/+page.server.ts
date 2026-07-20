@@ -5,7 +5,7 @@ import { redirect } from "@sveltejs/kit";
 
 export const load: PageServerLoad = async ({ fetch, url }) => {
   const depositFetcher = DepositFetcher(fetch, url);
-  const deposits = await depositFetcher.FindAll([]);
+  const deposits = await depositFetcher.FindAll({});
 
   return { deposits };
 };

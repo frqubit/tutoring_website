@@ -13,7 +13,10 @@
     async function save_rename() {
         const studentFetcher = FetcherWithDefaultClientSettings(StudentFetcher);
 
-        let output = await studentFetcher.Rename(new_name, [data.student!.id]);
+        let output = await studentFetcher.Rename({
+            body: new_name,
+            params: { id: data.student!.id },
+        });
         if (output !== null) {
             console.log(output.message);
         } else {
@@ -41,7 +44,7 @@
 
     async function toggle_active() {
         const studentFetcher = FetcherWithDefaultClientSettings(StudentFetcher);
-        await studentFetcher.ToggleActive([data.student!.id]);
+        await studentFetcher.ToggleActive({ params: { id: data.student!.id } });
 
         window.location.reload();
     }
@@ -161,7 +164,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {#each data.completed_sessions?.toSorted((a,b)=>a.date.getTime()-b.date.getTime()) as session}
+                    {#each data.completed_sessions?.toSorted((a, b) => a.date.getTime() - b.date.getTime()) as session}
                         <tr>
                             <td
                                 ><a

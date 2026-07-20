@@ -4,7 +4,7 @@ import { DepositFetcher, ClientFetcher } from "$lib/fetchers";
 export const load: PageServerLoad = async ({ fetch, url }) => {
   const clientFetcher = ClientFetcher(fetch, url);
   const clients = await clientFetcher
-    .FindAll([])
+    .FindAll({})
     .then((data) => data.filter((s) => s.active));
 
   return {
@@ -25,14 +25,13 @@ export const actions: Actions = {
       return;
     }
 
-    const response = await depositFetcher.Create(
-      {
+    const response = await depositFetcher.Create({
+      body: {
         client_id: +client_id,
         date: new Date(date),
         cents: +cents,
       },
-      [],
-    );
+    });
     console.log(response);
   },
 };

@@ -15,14 +15,17 @@
             URL.parse(window.location.href)!,
         );
 
-        const result = await fetcher.Reschedule(
-            {
+        const result = await fetcher.Reschedule({
+            body: {
                 date: new Date(Date.parse(toLocalISOString(new Date(date)))),
                 minutes: +minutes,
                 all,
             },
-            [data.id, data.idx],
-        );
+            params: {
+                id: data.id,
+                index: data.idx,
+            },
+        });
 
         goto("/calendar", { replaceState: true });
     }

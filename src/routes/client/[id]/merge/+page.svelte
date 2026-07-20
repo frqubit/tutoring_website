@@ -12,10 +12,12 @@
     async function apply_merge() {
         const clientFetcher = FetcherWithDefaultClientSettings(ClientFetcher);
 
-        const result = await clientFetcher.MergeInto([
-            +params.id,
-            merge_into_id,
-        ]);
+        const result = await clientFetcher.MergeInto({
+            params: {
+                source: +params.id,
+                target: merge_into_id,
+            },
+        });
 
         if (!result) {
             window.location.href = `/client/${merge_into_id}`;

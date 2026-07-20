@@ -14,12 +14,11 @@ export const actions: Actions = {
       return;
     }
 
-    const response = await clientFetcher.Create(
-      {
+    const response = await clientFetcher.Create({
+      body: {
         name,
         active,
       },
-      [],
-    );
+    });
   },
 };

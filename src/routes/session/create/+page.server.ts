@@ -5,7 +5,7 @@ import { BACKEND_DOMAIN, toLocalISOString } from "$lib";
 export const load: PageServerLoad = async ({ fetch, url }) => {
   const studentFetcher = StudentFetcher(fetch, url);
   const students = await studentFetcher
-    .FindAll([])
+    .FindAll({})
     .then((data) => data.filter((s) => s.active));
 
   return {
@@ -32,15 +32,14 @@ export const actions: Actions = {
       return;
     }
 
-    const response = await sessionFetcher.Create(
-      {
+    const response = await sessionFetcher.Create({
+      body: {
         student_id: +student_id,
         date: new Date(Date.parse(toLocalISOString(new Date(date)))),
         minutes: +minutes,
         every: +every,
         ends: undefined,
       },
-      [],
-    );
+    });
   },
 };

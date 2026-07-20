@@ -7,7 +7,7 @@ export const load: PageServerLoad = async ({ fetch, url, params }) => {
   const { id, idx } = params;
 
   const sessionFetcher = SessionFetcher(fetch, url);
-  const session = await sessionFetcher.FindOne([id]);
+  const session = await sessionFetcher.FindOne({ params: { id: +id } });
 
   if (!session) {
     throw error(404, "Does not exist");

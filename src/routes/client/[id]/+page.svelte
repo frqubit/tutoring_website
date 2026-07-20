@@ -14,7 +14,10 @@
             URL.parse(window.location.href)!,
         );
 
-        let output = await clientFetcher.Rename(new_name, [data.client!.id]);
+        let output = await clientFetcher.Rename({
+            body: new_name,
+            params: { id: data.client!.id },
+        });
         if (output !== null) {
             console.log(output.message);
         } else {
@@ -200,7 +203,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {#each data.completed_sessions?.toSorted((a,b)=>a.date.getTime()-b.date.getTime()) as session}
+                    {#each data.completed_sessions?.toSorted((a, b) => a.date.getTime() - b.date.getTime()) as session}
                         <tr>
                             <td
                                 ><a

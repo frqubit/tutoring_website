@@ -17,15 +17,15 @@ export const load: PageServerLoad = async ({ fetch, url }) => {
 
   const inOneWeek = new Date(start.getTime() + MS_IN_WEEK);
 
-  const sessions = await sessionFetcher.FindAllByFilter(
-    {
+  const sessions = await sessionFetcher.FindAllByFilter({
+    body: {
       start: start,
       end: inOneWeek,
       student_id: undefined,
       completed: undefined,
+      client_id: undefined,
     },
-    [],
-  );
+  });
 
   return { sessions, start_ms };
 };

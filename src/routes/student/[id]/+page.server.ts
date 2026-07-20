@@ -18,22 +18,23 @@ async function find_sessions(
   session_fetcher: ReturnType<typeof SessionFetcher>,
   id: number,
 ) {
-  const completed_sessions = await student_fetcher.FindAllCompletedSessionsOf([
-    id,
-  ]);
+  const completed_sessions = await student_fetcher.FindAllCompletedSessionsOf({
+    params: {
+      id: id,
+    },
+  });
 
   if (!completed_sessions) return null;
 
-  const future_sessions = await session_fetcher.FindAllByFilter(
-    {
+  const future_sessions = await session_fetcher.FindAllByFilter({
+    body: {
       student_id: id,
       client_id: undefined,
       start: undefined,
       end: undefined,
       completed: false,
     },
-    [],
-  );
+  });
 
   if (!future_sessions) return null;
 
@@ -46,7 +47,7 @@ async function find_sessions(
 export const load: PageServerLoad = async ({ fetch, params, url }) => {
   const studentFetcher = StudentFetcher(fetch, url);
   const sessionFetcher = SessionFetcher(fetch, url);
-  const student = await studentFetcher.FindOne([+params.id]);
+  const student = await studentFetcher.FindOne({ params: { id: +params.id } });
 
   if (!student) {
     return { student };
@@ -65,14 +66,14 @@ export const actions: Actions = {
   delete: async ({ fetch, params, url }) => {
     const studentFetcher = StudentFetcher(fetch, url);
 
-    await studentFetcher.Remove([+params.id]);
+    await studentFetcher.Remove({ params: { id: +params.id } });
 
     throw redirect(303, "/student");
   },
   toggleActive: async ({ fetch, params, url }) => {
     const studentFetcher = StudentFetcher(fetch, url);
 
-    await studentFetcher.ToggleActive([+params.id]);
+    await studentFetcher.ToggleActive({ params: { id: +params.id } });
 
     throw redirect(303, `/student/${params.id}`);
   },

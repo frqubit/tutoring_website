@@ -41,19 +41,21 @@
         const nextYear2 = month == 12 ? year2 + 1 : year2;
 
         const result = await fetcher.FindAllByFilter({
-            client_id: client,
-            start: new Date(
-                Date.parse(
-                    `20${year2}-${month < 10 ? "0" + month : month}-01T00:00:00.000Z`,
+            body: {
+                client_id: client,
+                start: new Date(
+                    Date.parse(
+                        `20${year2}-${month < 10 ? "0" + month : month}-01T00:00:00.000Z`,
+                    ),
                 ),
-            ),
-            end: new Date(
-                Date.parse(
-                    `20${nextYear2}-${nextMonth < 10 ? "0" + nextMonth : nextMonth}-01T00:00:00.000Z`,
+                end: new Date(
+                    Date.parse(
+                        `20${nextYear2}-${nextMonth < 10 ? "0" + nextMonth : nextMonth}-01T00:00:00.000Z`,
+                    ),
                 ),
-            ),
-            completed: false,
-            student_id: undefined
+                completed: false,
+                student_id: undefined,
+            },
         });
 
         sessions = result;
@@ -76,19 +78,21 @@
         const lastYear2 = month == 1 ? year2 - 1 : year2;
 
         const sessionsThisMonth = await sessionFetcher.FindAllByFilter({
-            client_id: client,
-            start: new Date(
-                Date.parse(
-                    `20${lastYear2}-${lastMonth < 10 ? "0" + lastMonth : lastMonth}-01T00:00:00.000Z`,
+            body: {
+                client_id: client,
+                start: new Date(
+                    Date.parse(
+                        `20${lastYear2}-${lastMonth < 10 ? "0" + lastMonth : lastMonth}-01T00:00:00.000Z`,
+                    ),
                 ),
-            ),
-            end: new Date(
-                Date.parse(
-                    `20${year2}-${month < 10 ? "0" + month : month}-01T00:00:00.000Z`,
+                end: new Date(
+                    Date.parse(
+                        `20${year2}-${month < 10 ? "0" + month : month}-01T00:00:00.000Z`,
+                    ),
                 ),
-            ),
-            completed: false,
-            student_id: undefined
+                completed: false,
+                student_id: undefined,
+            },
         });
 
         const totalThisMonthNotDone =
@@ -99,7 +103,7 @@
             60;
 
         const remainingBalance =
-            (await clientFetcher.GetBalanceOf([client])) -
+            (await clientFetcher.GetBalanceOf({ params: { id: client } })) -
             totalThisMonthNotDone;
 
         const sessions_string = sessions
@@ -206,7 +210,8 @@ ${total_hours - hourModify > 0 ? `${finalHoursStr}×35=$${amountDuePadded} due` 
             <tr>
                 <td
                     ><a href={`/session/${session.id}`} class="text-blue-700"
-                        >{session.students.find((s) => s.client.id == client)!.name}
+                        >{session.students.find((s) => s.client.id == client)!
+                            .name}
                         {session.students.length > 1
                             ? `+ ${session.students.length - 1}`
                             : ""}</a

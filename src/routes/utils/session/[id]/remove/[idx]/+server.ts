@@ -9,14 +9,13 @@ export const GET: RequestHandler = async ({ fetch, params, url }) => {
 
   const studentid = pagestudent
     ? await sessionFetcher
-        .FindOne([+params.id])
+        .FindOne({ params: { id: +params.id } })
         .then((res) => res!.students[0].id)
     : null;
 
-  const result = await sessionFetcher.RemoveOneInSeries([
-    +params.id,
-    +params.idx,
-  ]);
+  const result = await sessionFetcher.RemoveOneInSeries({
+    params: { id: +params.id, index: +params.idx },
+  });
 
   if (studentid) throw redirect(307, `/student/${studentid}`);
   else if (+params.idx == 0) {

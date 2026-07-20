@@ -15,7 +15,7 @@
             URL.parse(window.location.href)!,
         );
 
-        const allStudents = await studentFetcher.FindAll(undefined);
+        const allStudents = await studentFetcher.FindAll({});
         other_students_options = allStudents
             .filter(
                 (s) =>
@@ -34,10 +34,12 @@
             URL.parse(window.location.href)!,
         );
 
-        await sessionFetcher.AddStudentToSession([
-            data.session!.id,
-            selected_student,
-        ]);
+        await sessionFetcher.AddStudentToSession({
+            params: {
+                sessionId: data.session!.id,
+                studentId: selected_student,
+            },
+        });
 
         location.reload();
     }
@@ -48,10 +50,12 @@
             URL.parse(window.location.href)!,
         );
 
-        const resp = await sessionFetcher.RemoveStudentFromSession([
-            data.session!.id,
-            student_id,
-        ]);
+        const resp = await sessionFetcher.RemoveStudentFromSession({
+            params: {
+                sessionId: data.session!.id,
+                studentId: student_id,
+            },
+        });
 
         if (resp && "error" in resp) {
             console.log(resp.message);

@@ -18,26 +18,25 @@ async function find_sessions_and_deposits(
   session_fetcher: ReturnType<typeof SessionFetcher>,
   id: number,
 ) {
-  const deposits = await client_fetcher.FindAllDepositsOf([id]);
+  const deposits = await client_fetcher.FindAllDepositsOf({ params: { id } });
 
   if (!deposits) return null;
 
-  const completed_sessions = await client_fetcher.FindAllCompletedSessionsOf([
-    id,
-  ]);
+  const completed_sessions = await client_fetcher.FindAllCompletedSessionsOf({
+    params: { id },
+  });
 
   if (!completed_sessions) return null;
 
-  const future_sessions = await session_fetcher.FindAllByFilter(
-    {
+  const future_sessions = await session_fetcher.FindAllByFilter({
+    body: {
       student_id: undefined,
       client_id: id,
       start: undefined,
       end: undefined,
       completed: false,
     },
-    [],
-  );
+  });
 
   if (!future_sessions) return null;
 
@@ -51,7 +50,7 @@ async function find_sessions_and_deposits(
 export const load: PageServerLoad = async ({ fetch, params, url }) => {
   const clientFetcher = ClientFetcher(fetch, url);
   const sessionFetcher = SessionFetcher(fetch, url);
-  const client = await clientFetcher.FindOne([+params.id]);
+  const client = await clientFetcher.FindOne({ params: { id: +params.id } });
 
   if (!client) {
     return { client };
@@ -70,14 +69,14 @@ export const actions: Actions = {
   delete: async ({ fetch, params, url }) => {
     const clientFetcher = ClientFetcher(fetch, url);
 
-    await clientFetcher.Remove([+params.id]);
+    await clientFetcher.Remove({ params: { id: +params.id } });
 
     throw redirect(303, "/student");
   },
   toggleActive: async ({ fetch, params, url }) => {
     const clientFetcher = ClientFetcher(fetch, url);
 
-    await clientFetcher.ToggleActive([+params.id]);
+    await clientFetcher.ToggleActive({ params: { id: +params.id } });
 
     throw redirect(303, `/student/${params.id}`);
   },

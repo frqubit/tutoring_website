@@ -14,14 +14,13 @@
     async function create_student() {
         const studentFetcher = FetcherWithDefaultClientSettings(StudentFetcher);
 
-        const result = await studentFetcher.Create(
-            {
+        const result = await studentFetcher.Create({
+            body: {
                 name,
                 client_id,
                 active,
             },
-            [],
-        );
+        });
 
         if ("error" in result) {
             console.error(result.message);
