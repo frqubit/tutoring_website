@@ -6,9 +6,9 @@ name = "frqubit.tutoring.website"
 version = "0.1.0"
 
 [scripts]
+dev = "concurrently 'batl frqubit.tutoring.backend:dev' 'pnpm dev'"
 reload_db = "batl frqubit.tutoring.database:reload_db"
 reload_live_db = "batl frqubit.tutoring.database:reload_live_db"
-dev = "concurrently 'batl frqubit.tutoring.backend:dev' 'pnpm dev'"
 
 [dependencies]
 "frqubit.tutoring.backend" = "0.1.0"
@@ -16,6 +16,7 @@ dev = "concurrently 'batl frqubit.tutoring.backend:dev' 'pnpm dev'"
 
 [links]
 "frqubit.tutoring.backend/src/utils" = "src/lib/backend/utils"
+"frqubit.tutoring.backend/src/webdata" = "src/lib/backend/webdata"
 "frqubit.tutoring.backend/src/modules" = "src/lib/backend/modules"
 
 [restrict.Unix]

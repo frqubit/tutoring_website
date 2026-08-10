@@ -1,4 +1,7 @@
 <script lang="ts">
+    import { enforce } from "$lib/backend/utils/type_utils";
+    import { type LatestFormat as StudentNoteFormat } from "$lib/backend/webdata/student_note";
+    import StudentNote from "$lib/components/StudentNote.svelte";
     import {
         FetcherWithDefaultClientSettings,
         StudentFetcher,
@@ -10,6 +13,15 @@
     let renaming = $state(false);
     let new_name = $state(data.student!.name);
 
+    const DEFAULT_STUDENT_NOTE = enforce<StudentNoteFormat>({
+        grade: "[GRADE]",
+        subjects: ["[SUBJECT]"],
+        description: "[DESCRIPTION]",
+        goals: ["[GOALS]"],
+    });
+
+    let student_note = $state(data.student_note || DEFAULT_STUDENT_NOTE);
+
     async function save_rename() {
         const studentFetcher = FetcherWithDefaultClientSettings(StudentFetcher);
 
@@ -17,6 +29,21 @@
             body: new_name,
             params: { id: data.student!.id },
         });
+        if ("error" in output) {
+            console.log(output.message);
+        } else {
+            window.location.reload();
+        }
+    }
+
+    async function save_student_note() {
+        const studentFetcher = FetcherWithDefaultClientSettings(StudentFetcher);
+
+        let output = await studentFetcher.SaveStudentNote({
+            params: { id: +params.id },
+            body: student_note,
+        });
+
         if (output !== null) {
             console.log(output.message);
         } else {
@@ -154,37 +181,13 @@
         </div>
 
         <div class="w-1/2">
-            <h2 class="mt-4 mb-2 text-xl font-bold">Completed Sessions</h2>
-
-            <table class="border-3 w-full">
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Hours</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {#each data.completed_sessions?.toSorted((a, b) => a.date.getTime() - b.date.getTime()) as session}
-                        <tr>
-                            <td
-                                ><a
-                                    href={`/session/${session.id}`}
-                                    class="text-blue-700">{session.date}</a
-                                ></td
-                            >
-                            <td
-                                >{session.minutes /
-                                    (60 * session.students.length)}</td
-                            >
-                        </tr>
-                    {/each}
-
-                    <tr class="border-t">
-                        <td>Total</td>
-                        <td>{get_completed_session_total()}</td>
-                    </tr>
-                </tbody>
-            </table>
+            <StudentNote bind:student_note />
+            <button
+                class="w-full mt-6 bg-green-500 border-2 font-bold active:bg-green-500 hover:bg-green-400"
+                onclick={save_student_note}
+            >
+                Save
+            </button>
         </div>
     </div>
 {:else}

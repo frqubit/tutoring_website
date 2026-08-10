@@ -1,6 +1,5 @@
 import type { Actions, PageServerLoad } from "./$types";
 import { SessionFetcher, StudentFetcher } from "$lib/fetchers";
-import { BACKEND_DOMAIN } from "$lib";
 import { redirect } from "@sveltejs/kit";
 
 // interface SessionsAndDeposits {
@@ -59,7 +58,20 @@ export const load: PageServerLoad = async ({ fetch, params, url }) => {
     +params.id,
   );
 
-  return { student, ...sessions_and_deposits };
+  const student_note = await studentFetcher
+    .LoadStudentNote({
+      params: { id: +params.id },
+    })
+    .then((res) => {
+      if ("error" in res) {
+        console.error(res.message);
+        return null;
+      }
+
+      return res;
+    });
+
+  return { student, student_note, ...sessions_and_deposits };
 };
 
 export const actions: Actions = {
