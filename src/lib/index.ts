@@ -43,13 +43,20 @@ export const send_cookie_fetch: typeof fetch = (url, settings) => {
   });
 };
 
-export function toLocalISOString(date: Date) {
+export function getDateStringOffset() {
   const pad = (n: number) => n.toString().padStart(2, "0");
 
   // Get timezone offset in minutes and convert to +/-HH:mm
-  const tzo = -date.getTimezoneOffset();
+  const tzo = -new Date().getTimezoneOffset();
   const dif = tzo >= 0 ? "+" : "-";
   const offset = `${dif}${pad(Math.floor(Math.abs(tzo) / 60))}:${pad(Math.abs(tzo) % 60)}`;
+
+  return offset;
+}
+
+export function toLocalISOString(date: Date) {
+  const pad = (n: number) => n.toString().padStart(2, "0");
+  const offset = getDateStringOffset();
 
   return (
     date.getFullYear() +

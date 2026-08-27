@@ -5,7 +5,7 @@
         ClientFetcher,
         type FetcherOutput,
     } from "$lib/fetchers";
-    import { send_cookie_fetch } from "$lib";
+    import { send_cookie_fetch, getDateStringOffset } from "$lib";
 
     const MONTHS = [
         "January",
@@ -45,12 +45,12 @@
                 client_id: client,
                 start: new Date(
                     Date.parse(
-                        `20${year2}-${month < 10 ? "0" + month : month}-01T00:00:00.000Z`,
+                        `20${year2}-${month < 10 ? "0" + month : month}-01T00:00:00.000${getDateStringOffset()}`,
                     ),
                 ),
                 end: new Date(
                     Date.parse(
-                        `20${nextYear2}-${nextMonth < 10 ? "0" + nextMonth : nextMonth}-01T00:00:00.000Z`,
+                        `20${nextYear2}-${nextMonth < 10 ? "0" + nextMonth : nextMonth}-01T00:00:00.000${getDateStringOffset()}`,
                     ),
                 ),
                 completed: false,
@@ -82,18 +82,30 @@
                 client_id: client,
                 start: new Date(
                     Date.parse(
-                        `20${lastYear2}-${lastMonth < 10 ? "0" + lastMonth : lastMonth}-01T00:00:00.000Z`,
+                        `20${lastYear2}-${lastMonth < 10 ? "0" + lastMonth : lastMonth}-01T00:00:00.000${getDateStringOffset()}`,
                     ),
                 ),
                 end: new Date(
                     Date.parse(
-                        `20${year2}-${month < 10 ? "0" + month : month}-01T00:00:00.000Z`,
+                        `20${year2}-${month < 10 ? "0" + month : month}-01T00:00:00.000${getDateStringOffset()}`,
                     ),
                 ),
                 completed: false,
                 student_id: undefined,
             },
         });
+
+        const numDifferentStudents = sessionsThisMonth.reduce((agg, next) => {
+            let out: number[] = agg;
+
+            for (const student of next.students) {
+                if (out.indexOf(student.id) == -1) {
+                    out.push(student.id);
+                }
+            }
+
+            return out;
+        }, [] as number[]).length;
 
         const totalThisMonthNotDone =
             (sessionsThisMonth
@@ -108,8 +120,20 @@
 
         const sessions_string = sessions
             .map((s) => {
-                const shared = s.students.length > 1 ? " [Shared]" : "";
-                return `${MONTHS[s.date.getMonth()]} ${s.date.getDate()} (${s.minutes / 60} hour${s.minutes == 60 ? "" : "s"})${shared}`;
+                const studentName = s.students
+                    .find((v) => v.client.id == client)
+                    ?.name.split(" ")[0];
+
+                const endingStr =
+                    s.students.length > 1
+                        ? numDifferentStudents > 1
+                            ? ` [${studentName}, Shared]`
+                            : ` [Shared]`
+                        : numDifferentStudents > 1
+                          ? ` [${studentName}]`
+                          : "";
+
+                return `${MONTHS[s.date.getMonth()]} ${s.date.getDate()} (${s.minutes / 60} hour${s.minutes == 60 ? "" : "s"})${endingStr}`;
             })
             .join("\n");
         // Tracks THEIR share, not the total being done
