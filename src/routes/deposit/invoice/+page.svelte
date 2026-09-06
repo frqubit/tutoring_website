@@ -55,6 +55,7 @@
                 ),
                 completed: false,
                 student_id: undefined,
+                max_count: 1000,
             },
         });
 
@@ -92,6 +93,7 @@
                 ),
                 completed: false,
                 student_id: undefined,
+                max_count: 1000,
             },
         });
 
