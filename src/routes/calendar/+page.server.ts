@@ -24,6 +24,7 @@ export const load: PageServerLoad = async ({ fetch, url }) => {
       student_id: undefined,
       completed: undefined,
       client_id: undefined,
+      max_count: undefined,
     },
   });
 
