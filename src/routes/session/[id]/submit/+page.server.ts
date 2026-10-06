@@ -1,0 +1,20 @@
+import type { Actions, PageServerLoad } from "./$types";
+import { SessionFetcher } from "$lib/fetchers";
+import { BACKEND_DOMAIN, MS_PER_WEEK } from "$lib";
+import { error } from "@sveltejs/kit";
+
+export const load: PageServerLoad = async ({ fetch, url, params }) => {
+  const { id } = params;
+
+  const sessionFetcher = SessionFetcher(fetch, url);
+  const session = await sessionFetcher.FindOne({ params: { id: +id } });
+
+  if (!session) {
+    throw error(404, "Does not exist");
+  }
+
+  return {
+    session,
+    id: +id,
+  };
+};

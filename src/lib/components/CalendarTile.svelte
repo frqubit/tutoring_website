@@ -24,11 +24,17 @@
     const past_and_uncompleted =
         session.date.getTime() < new Date().getTime() &&
         session.completed == SessionCompletion.NONE;
+
+    const color = past_and_uncompleted
+        ? "bg-orange-300"
+        : session.completed == SessionCompletion.NOSHOW
+          ? "bg-red-300"
+          : session.completed == SessionCompletion.LATECANCEL
+            ? "bg-blue-100"
+            : "";
 </script>
 
-<div
-    class={`border-y px-1 flex flex-col w-full ${past_and_uncompleted && "bg-orange-300"}`}
->
+<div class={`border-y px-1 flex flex-col w-full ${color}`}>
     <a
         class="font-bold text-blue-500"
         href={`/student/${session.students[0].id}`}

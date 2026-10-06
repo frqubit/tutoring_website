@@ -1,5 +1,6 @@
 <script lang="ts">
     import { send_cookie_fetch } from "$lib";
+    import { SessionCompletion } from "$lib/backend/entities/Session.enum";
     import { ClientFetcher } from "$lib/fetchers";
     import type { PageProps } from "./$types";
 
@@ -34,10 +35,14 @@
     function get_completed_session_total() {
         return (
             safe_div(
-                data.completed_sessions?.reduce(
-                    (acc, cur) => acc + cur.minutes / cur.students.length,
-                    0,
-                ),
+                data.completed_sessions?.reduce((acc, cur) => {
+                    let eff_length = cur.minutes;
+                    if (cur.completed == SessionCompletion.LATECANCEL) {
+                        eff_length *= 0.5;
+                    }
+
+                    return acc + eff_length / cur.students.length;
+                }, 0),
                 60,
             ) || 0
         );
@@ -204,7 +209,14 @@
                 </thead>
                 <tbody>
                     {#each data.completed_sessions?.toSorted((a, b) => a.date.getTime() - b.date.getTime()) as session}
-                        <tr>
+                        <tr
+                            class={session.completed == SessionCompletion.NOSHOW
+                                ? "bg-red-300"
+                                : session.completed ==
+                                    SessionCompletion.LATECANCEL
+                                  ? "bg-blue-200"
+                                  : ""}
+                        >
                             <td
                                 ><a
                                     href={`/session/${session.id}`}
@@ -212,8 +224,16 @@
                                 ></td
                             >
                             <td
-                                >{session.minutes /
-                                    (60 * session.students.length)}</td
+                                class={session.completed ==
+                                SessionCompletion.LATECANCEL
+                                    ? "text-red-600 font-bold"
+                                    : ""}
+                                >{(session.minutes /
+                                    (60 * session.students.length)) *
+                                    (session.completed ==
+                                    SessionCompletion.LATECANCEL
+                                        ? 0.5
+                                        : 1)}</td
                             >
                         </tr>
                     {/each}

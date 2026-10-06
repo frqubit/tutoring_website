@@ -23,6 +23,6 @@ export const actions: Actions = {
 
     await sessionFetcher.Remove({ params: { id: +params.id } });
 
-    throw redirect(303, `/session`);
+    throw redirect(303, `/calendar`);
   },
 };

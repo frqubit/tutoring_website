@@ -18,6 +18,7 @@
         subjects: ["[SUBJECT]"],
         description: "[DESCRIPTION]",
         goals: ["[GOALS]"],
+        timezone: "",
     });
 
     let student_note = $state(data.student_note || DEFAULT_STUDENT_NOTE);
@@ -151,9 +152,7 @@
                             <td>{session.minutes / 60}</td>
                             <td class="pl-8">
                                 {#if i == 0}
-                                    <a
-                                        href={`/utils/student/${params.id}/complete/${session.id}`}
-                                    >
+                                    <a href={`/session/${session.id}/submit`}>
                                         ✅
                                     </a>
                                 {:else}
