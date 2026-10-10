@@ -3,8 +3,11 @@
     import favicon from "$lib/assets/favicon.svg";
     import { SIGNIN_URL, SIGNOUT_URL } from "$lib";
     import { dev } from "$app/environment";
+    import { localUserInfo } from "$lib/utils/user_utils.svelte.js";
 
     let { children, data } = $props();
+
+    let userInfo = localUserInfo();
 </script>
 
 <svelte:head><link rel="icon" href={favicon} /></svelte:head>
@@ -36,7 +39,22 @@
         {#if !data.signed_in}
             <a href={SIGNIN_URL} class="text-blue-700 ml-auto">Sign in</a>
         {:else}
-            <a href={SIGNOUT_URL} class="text-blue-700 ml-auto">Sign out</a>
+            <div class="ml-auto flex flex-row items-center gap-x-5">
+                {#await userInfo then userInfo}
+                    {#if userInfo.value?.client?.id}
+                        <a
+                            class="text-blue-700"
+                            href={`/client/${userInfo.value.client.id}`}
+                            >{userInfo.value.client.name}</a
+                        >
+                    {:else if userInfo.value?.is_administrator}
+                        <span class="text-red-700 bold select-none"
+                            >Administrator</span
+                        >
+                    {/if}
+                {/await}
+                <a href={SIGNOUT_URL} class="text-blue-700">Sign out</a>
+            </div>
         {/if}
     </div>
     {@render children()}

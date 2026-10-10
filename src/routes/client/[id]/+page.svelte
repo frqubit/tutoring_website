@@ -69,15 +69,25 @@
                 bind:value={new_name}
             />
         {:else}
-            <h1 class="font-bold text-3xl">
-                {data.client.name} ({data.client.active
-                    ? "active"
-                    : "inactive"})
-            </h1>
+            <div class="flex flex-row justify-start items-center">
+                <h1 class="font-bold text-3xl">
+                    {data.client.name} ({data.client.active
+                        ? "active"
+                        : "inactive"})
+                </h1>
+
+                <span class="ml-2">{data.client?.user_account}</span>
+            </div>
         {/if}
 
         <div class="flex flex-row gap-x-6 ml-auto">
             {#if data.client.active}
+                {#if data.client?.user_account == null}
+                    <a href={`/client/${params.id}/create_account`}>
+                        Create Account
+                    </a>
+                {/if}
+
                 <a href={`/client/${params.id}/merge`}>Merge</a>
                 <button
                     onclick={async () => {
