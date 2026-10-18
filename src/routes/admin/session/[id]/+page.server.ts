@@ -1,0 +1,28 @@
+import type { Actions, PageServerLoad } from "./$types";
+import { SessionFetcher } from "$lib/fetchers";
+import { redirect } from "@sveltejs/kit";
+
+export const load: PageServerLoad = async ({ fetch, params, url }) => {
+  const sessionFetcher = SessionFetcher(fetch, url);
+  const session = await sessionFetcher.FindOne({ params: { id: +params.id } });
+
+  if (session && session.every > 0 && !session.completed) {
+    const future_dates = await sessionFetcher.FindFutureDatesOf({
+      params: { id: +params.id },
+    });
+
+    return { session, future_dates };
+  } else {
+    return { session };
+  }
+};
+
+export const actions: Actions = {
+  delete: async ({ fetch, params, url }) => {
+    const sessionFetcher = SessionFetcher(fetch, url);
+
+    await sessionFetcher.Remove({ params: { id: +params.id } });
+
+    throw redirect(303, `/admin/calendar`);
+  },
+};

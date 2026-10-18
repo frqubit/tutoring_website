@@ -37,7 +37,7 @@
 <div class={`border-y px-1 flex flex-col w-full ${color}`}>
     <a
         class="font-bold text-blue-500"
-        href={`/student/${session.students[0].id}`}
+        href={`/admin/student/${session.students[0].id}`}
         >{session.students[0].name}
         {session.students.length > 1
             ? `+ ${session.students.length - 1}`
@@ -52,7 +52,7 @@
         {#if session.date.getTime() > new Date().getTime()}
             <a
                 class="ml-auto"
-                href={`/session/${session.id}/reschedule/${session.index}`}
+                href={`/admin/session/${session.id}/reschedule/${session.index}`}
                 >⏱️</a
             >
         {/if}
