@@ -4,13 +4,14 @@ import { dev } from "$app/environment";
 export const BACKEND_DOMAIN = dev
   ? "http://localhost:3000"
   : "https://api.tutoring.frqubit.net";
-export const COGNITO_BASE_URI =
-  "https://us-east-17bvoomwr4.auth.us-east-1.amazoncognito.com";
+export const COGNITO_BASE_URI = dev
+  ? "https://us-east-1rt1sb3rfe.auth.us-east-1.amazoncognito.com"
+  : "https://us-east-17bvoomwr4.auth.us-east-1.amazoncognito.com";
 
 function getSigninUrl(): string {
   const out = new URL("/login/continue", COGNITO_BASE_URI);
   out.search = new URLSearchParams({
-    client_id: "2cq5ns7arvn12i9ll973hdj0f9",
+    client_id: dev ? "ug218asd0vm7sjjjt65hh6dlj" : "2cq5ns7arvn12i9ll973hdj0f9",
     response_type: "code",
     scope: "email+openid+phone",
     redirect_uri: new URL("/auth", BACKEND_DOMAIN).toString(),
@@ -24,7 +25,7 @@ function getSigninUrl(): string {
 function getSignoutUrl(): string {
   const out = new URL("/logout", COGNITO_BASE_URI);
   out.search = new URLSearchParams({
-    client_id: "2cq5ns7arvn12i9ll973hdj0f9",
+    client_id: dev ? "ug218asd0vm7sjjjt65hh6dlj" : "2cq5ns7arvn12i9ll973hdj0f9",
     logout_uri: new URL("/auth/logout", BACKEND_DOMAIN).toString(),
     redirect_uri: new URL("/auth/logout", BACKEND_DOMAIN).toString(),
     response_type: "code",
