@@ -7,7 +7,7 @@ import {
 } from "$lib/backend/webdata/user_info";
 import { AuthFetcher, FetcherWithDefaultClientSettings } from "$lib/fetchers";
 
-class UserInfoCls {
+export class UserInfoCls {
   value = $state() as LatestUserInfoFormat | null;
 
   private constructor() {
@@ -71,6 +71,10 @@ class UserInfoCls {
     }
 
     return info;
+  }
+
+  public static wipe() {
+    localStorage.removeItem("tuserinfo");
   }
 }
 

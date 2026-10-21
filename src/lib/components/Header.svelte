@@ -1,6 +1,8 @@
 <script lang="ts">
+    import { dev } from "$app/environment";
     import { SIGNIN_URL, SIGNOUT_URL } from "$lib";
     import { localUserInfo } from "$lib/utils/user_utils.svelte.js";
+    import DevSignIn from "./dev/DevSignIn.svelte";
 
     let { signed_in } = $props();
 
@@ -45,7 +47,11 @@
                     >
                 {/if}
             {/await}
-            <a href={SIGNOUT_URL} class="text-blue-700">Sign out</a>
+            {#if dev}
+                <DevSignIn />
+            {:else}
+                <a href={SIGNOUT_URL} class="text-blue-700">Sign out</a>
+            {/if}
         </div>
     {/if}
 </div>
