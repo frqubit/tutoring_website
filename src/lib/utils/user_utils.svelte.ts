@@ -7,6 +7,13 @@ import {
 } from "$lib/backend/webdata/user_info";
 import { AuthFetcher, FetcherWithDefaultClientSettings } from "$lib/fetchers";
 
+interface StudentBasics {
+  name: string;
+  client: {
+    id: number;
+  };
+}
+
 export class UserInfoCls {
   value = $state() as LatestUserInfoFormat | null;
 
@@ -75,6 +82,13 @@ export class UserInfoCls {
 
   public static wipe() {
     localStorage.removeItem("tuserinfo");
+  }
+
+  public find_student_of_mine<T extends StudentBasics>(vs: T[]): T | null {
+    const clientId = this.value?.client?.id;
+    if (!clientId) return null;
+
+    return vs.find((s) => s.client.id == clientId) || null;
   }
 }
 
