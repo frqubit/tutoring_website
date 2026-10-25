@@ -3,7 +3,7 @@ import { dev } from "$app/environment";
 // place files you want to import through the `$lib` alias in this folder.
 export const BACKEND_DOMAIN = dev
   ? "http://localhost:3000"
-  : "https://api.tutoring.frqubit.net";
+  : "https://api.mindswithwings.com";
 export const COGNITO_BASE_URI = dev
   ? "https://us-east-1rt1sb3rfe.auth.us-east-1.amazoncognito.com"
   : "https://us-east-17bvoomwr4.auth.us-east-1.amazoncognito.com";

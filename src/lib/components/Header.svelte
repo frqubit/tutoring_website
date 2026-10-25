@@ -2,7 +2,7 @@
     import { dev } from "$app/environment";
     import { SIGNIN_URL, SIGNOUT_URL } from "$lib";
     import { localUserInfo } from "$lib/utils/user_utils.svelte.js";
-    import DevSignIn from "./dev/DevSignIn.svelte";
+    import AdminBe from "./AdminBe.svelte";
 
     let { signed_in } = $props();
 
@@ -16,7 +16,7 @@
             Billing
         </a>
     {:then userInfo}
-        {#if userInfo.value?.is_administrator}
+        {#if userInfo.value?.is_administrator && userInfo.value.client == undefined}
             <a href="/admin" class="text-red-700 text-xl font-semibold">
                 Homepage
             </a>
@@ -57,11 +57,15 @@
                     >
                 {/if}
             {/await}
-            {#if dev}
-                <DevSignIn />
-            {:else}
-                <a href={SIGNOUT_URL} class="text-blue-700">Sign out</a>
-            {/if}
+            {#await userInfo then userInfo}
+                {#if dev || userInfo.value?.is_administrator}
+                    <AdminBe />
+                {/if}
+
+                {#if !dev}
+                    <a href={SIGNOUT_URL} class="text-blue-700">Sign out</a>
+                {/if}
+            {/await}
         </div>
     {/if}
 </div>

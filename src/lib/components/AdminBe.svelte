@@ -4,6 +4,7 @@
         FetcherWithDefaultClientSettings,
         ClientFetcher,
     } from "$lib/fetchers";
+    import { BACKEND_DOMAIN } from "$lib";
 
     async function get_clients() {
         const fetcher = FetcherWithDefaultClientSettings(ClientFetcher);
@@ -17,7 +18,7 @@
 
     async function devlogin() {
         UserInfoCls.wipe();
-        window.location.href = `http://localhost:3000/auth/devsignin?clientid=${devid}`;
+        window.location.href = `${BACKEND_DOMAIN}/auth/devsignin?clientid=${devid}`;
     }
 </script>
 
@@ -30,4 +31,4 @@
     {/await}
 </select>
 
-<button onclick={devlogin}>Log in</button>
+<button onclick={devlogin}>Become</button>

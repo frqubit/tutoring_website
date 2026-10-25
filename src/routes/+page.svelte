@@ -67,7 +67,7 @@
             </div>
         </div>
 
-        <span class="font-bold text-2xl text-blue-700">Join Session</span>
+        <!-- <span class="font-bold text-2xl text-blue-700">Join Session</span> -->
     </div>
 </div>
 

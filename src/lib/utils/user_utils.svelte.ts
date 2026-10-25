@@ -5,7 +5,9 @@ import {
   type LatestFormat as LatestUserInfoFormat,
   AnyVersion as AnyUserInfoVersion,
 } from "$lib/backend/webdata/user_info";
+import { AnyVersion as AnyAuthTokenVersion } from "$lib/backend/webdata/auth_token";
 import { AuthFetcher, FetcherWithDefaultClientSettings } from "$lib/fetchers";
+import { getCookie } from "./cookie_utils";
 
 interface StudentBasics {
   name: string;
@@ -29,10 +31,33 @@ export class UserInfoCls {
         } else {
           const any_version_val = localVal;
 
-          if ("is_administrator" in any_version_val) {
+          if (
+            "is_administrator" in any_version_val &&
+            "created" in any_version_val
+          ) {
+            // Check if it needs to be reset anyway from the cookie
+            const tauth_cookie = getCookie("TAUTH") || "";
+            if (!tauth_cookie) {
+              this.value = null;
+              return;
+            }
+
+            const tauth = AnyAuthTokenVersion.de(tauth_cookie);
+            if (tauth instanceof DeFailure || !("created" in tauth)) {
+              console.error(`Problem with tauth ${tauth_cookie}: ${tauth}`);
+              this.value = null;
+              return;
+            }
+
+            if (tauth.created.getTime() > any_version_val.created.getTime()) {
+              this.value = null;
+              return;
+            }
+
             this.value = any_version_val;
           } else {
-            // Just reset the key at this point, this is V1
+            // Just reset the key at this point, this is V1 or V2
+            // V1 doesn't have is_administrator and V2 doesn't have created
             this.value = null;
           }
         }
