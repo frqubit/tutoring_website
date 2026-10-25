@@ -12,23 +12,35 @@
 <div class="w-full border-b-2 mb-4 flex flex-row items-center gap-x-5">
     {#await userInfo}
         <a href="/" class="text-blue-700 text-xl font-semibold">Homepage</a>
-    {:then userInfo}
-        <a
-            href={userInfo.value?.is_administrator ? "/admin" : "/"}
-            class={`${userInfo.value?.is_administrator ? "text-red-700" : "text-blue-700"} text-xl font-semibold`}
-        >
-            Homepage
+        <a href="/billing" class="text-blue-700 text-xl font-semibold">
+            Billing
         </a>
+    {:then userInfo}
+        {#if userInfo.value?.is_administrator}
+            <a href="/admin" class="text-red-700 text-xl font-semibold">
+                Homepage
+            </a>
+
+            <a href="/admin/student" class="text-blue-700 text-xl font-semibold"
+                >Students</a
+            >
+            <a href="/admin/client" class="text-blue-700 text-xl font-semibold"
+                >Clients</a
+            >
+            <a
+                href="/admin/calendar"
+                class="text-blue-700 text-xl font-semibold">Calendar</a
+            >
+        {:else}
+            <a href="/" class="text-blue-700 text-xl font-semibold">
+                Homepage
+            </a>
+
+            <a href="/billing" class="text-blue-700 text-xl font-semibold">
+                Billing
+            </a>
+        {/if}
     {/await}
-    <a href="/admin/student" class="text-blue-700 text-xl font-semibold"
-        >Students</a
-    >
-    <a href="/admin/client" class="text-blue-700 text-xl font-semibold"
-        >Clients</a
-    >
-    <a href="/admin/calendar" class="text-blue-700 text-xl font-semibold"
-        >Calendar</a
-    >
 
     {#if !signed_in}
         <a href={SIGNIN_URL} class="text-blue-700 ml-auto">Sign in</a>
