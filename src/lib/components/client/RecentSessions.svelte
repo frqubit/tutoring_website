@@ -29,32 +29,60 @@
     const recentSessionsPromise = get_recent_sessions();
 </script>
 
-<table class="w-full select-none">
-    <tbody>
-        <tr class="font-bold text-2xl border-b">
-            <th class="text-left w-1/2">Date/Time</th>
-            <th class="w-1/4">Student</th>
-            <th class="w-1/4">Length</th>
-        </tr>
-        {#await recentSessionsPromise then recentSessions}
-            {#each recentSessions as session}
-                <tr class="text-2xl text-center mt-2">
-                    <td class="text-left">{session.date.toLocaleString()}</td>
-                    <td>
+<div
+    class="
+        w-full select-none
+        flex flex-col justify-start items-start
+        md:grid md:grid-cols-3
+    "
+>
+    <div
+        class="
+            font-bold text-2xl
+            hidden md:contents
+        "
+    >
+        <span class="text-left">Date/Time</span>
+        <span class="w-full text-center">Student</span>
+        <span class="w-full text-center">Length</span>
+    </div>
+    <hr
+        class="
+            w-full col-span-3
+            hidden md:block
+        "
+    />
+    {#await recentSessionsPromise then recentSessions}
+        {#each recentSessions as session}
+            <div class="text-2xl text-center mt-2 contents recentSession">
+                <span class="text-left pt-3 md:py-3 text-3xl md:text-2xl"
+                    >{session.date.toLocaleString()}</span
+                >
+                <div
+                    class="
+                        flex flex-row justify-start items-start md:contents
+                        border-b border-dashed md:border-none
+                        w-full
+                    "
+                >
+                    <span class="pt-1 mb-3 md:py-3 md:mb-0">
                         {#await userInfoPromise then userInfo}
                             {userInfo.find_student_of_mine(session.students)
                                 ?.name}
                         {/await}
-                    </td>
-                    <td>{session.minutes} minutes</td>
-                </tr>
-            {/each}
-        {/await}
-    </tbody>
-</table>
+                    </span>
+                    <span class="md:hidden mr-2">,</span>
+                    <span class="pt-1 pb-3 md:py-3">
+                        {session.minutes} minutes
+                    </span>
+                </div>
+            </div>
+        {/each}
+    {/await}
+</div>
 
 <style>
-    td {
-        padding: 10px 0;
+    .recentSession:last-child > div {
+        border: none;
     }
 </style>

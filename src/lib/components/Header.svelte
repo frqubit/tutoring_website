@@ -48,9 +48,9 @@
         <div class="ml-auto flex flex-row items-center gap-x-5">
             {#await userInfo then userInfo}
                 {#if userInfo.value?.client?.id}
-                    <a class="text-blue-700" href={`/profile`}
+                    <!-- <a class="text-blue-700" href={`/profile`}
                         >{userInfo.value.client.name}</a
-                    >
+                    > -->
                 {:else if userInfo.value?.is_administrator}
                     <span class="text-red-700 bold select-none"
                         >Administrator</span

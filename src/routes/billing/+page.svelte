@@ -79,46 +79,45 @@
             {/await}
         </span>
         {#await nextInvoicePromise then nextInvoice}
-            <button onclick={() => (showInvoiceDetails = !showInvoiceDetails)}
-                >See Details</button
+            <button
+                class="text-blue-500 hover:text-blue-700 active:text-blue-500 select-none"
+                onclick={() => (showInvoiceDetails = !showInvoiceDetails)}
             >
+                {showInvoiceDetails ? "Hide Details" : "Show Details"}
+            </button>
         {/await}
     </div>
 
     {#await nextInvoicePromise then nextInvoice}
         {#if showInvoiceDetails}
             <div
-                class="absolute right-0 top-full w-full h-fit bg-white border mt-4 px-8 flex flex-col justify-start items-start"
+                class="
+                    absolute right-0 top-full w-full h-fit
+                    bg-white border mt-4 px-8
+                    grid grid-cols-4
+                    invoice-grid
+                "
             >
                 {#each nextInvoice as charge}
-                    <div
+                    <!-- <div
                         class="flex flex-row justify-between items-start mx-4 text-2xl w-full"
-                    >
-                        <span>{charge.name}</span>
-                        <span>{charge.date.toLocaleDateString()}</span>
-                        <span>{charge.student_name}</span>
-                        <span class="block">
-                            {cents_to_dollar_string(charge.cents)}
-                        </span>
-                    </div>
+                    > -->
+                    <span>{charge.name}</span>
+                    <span>{charge.date.toLocaleDateString()}</span>
+                    <span>{charge.student_name}</span>
+                    <span class="block">
+                        {cents_to_dollar_string(charge.cents)}
+                    </span>
+                    <!-- </div> -->
                 {/each}
 
-                <hr class="w-full" />
-                <div
-                    class="flex flex-row justify-between items-start mx-4 text-4xl w-full"
-                >
-                    <span></span>
-                    <span></span>
-                    <span>Total</span>
-                    <span class="block">
-                        {cents_to_dollar_string(
-                            nextInvoice.reduce(
-                                (agg, next) => agg + next.cents,
-                                0,
-                            ),
-                        )}
-                    </span>
-                </div>
+                <hr class="w-full col-span-4" />
+                <span class="col-start-3 font-bold">Total</span>
+                <span class="block font-bold">
+                    {cents_to_dollar_string(
+                        nextInvoice.reduce((agg, next) => agg + next.cents, 0),
+                    )}
+                </span>
             </div>
         {/if}
     {/await}
@@ -139,3 +138,13 @@
         {/each}
     {/await}
 </div>
+
+<style>
+    .invoice-grid > span {
+        font-size: 1.5rem;
+    }
+
+    .invoice-grid > span:not(:nth-child(4n + 1)) {
+        text-align: end;
+    }
+</style>
