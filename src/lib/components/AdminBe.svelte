@@ -22,7 +22,7 @@
     }
 </script>
 
-<select class="ml-auto border-b-2" bind:value={devid}>
+<select class="ml-auto border-b-2 hidden md:block" bind:value={devid}>
     <option value="-1">Administrator</option>
     {#await clients then clients}
         {#each clients as client}
@@ -31,4 +31,4 @@
     {/await}
 </select>
 
-<button onclick={devlogin}>Become</button>
+<button class="hidden md:block" onclick={devlogin}>Become</button>
