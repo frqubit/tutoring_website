@@ -3,6 +3,7 @@
     import { SIGNIN_URL, SIGNOUT_URL } from "$lib";
     import { localUserInfo } from "$lib/utils/user_utils.svelte.js";
     import AdminBe from "./AdminBe.svelte";
+    import Hamburger from "$lib/assets/hamburger.svg";
 
     let { signed_in } = $props();
 
@@ -10,6 +11,7 @@
 </script>
 
 <div class="w-full border-b-2 mb-4 flex flex-row items-center gap-x-5">
+    <img src={Hamburger} class="h-full" alt="hamburger" />
     {#await userInfo}
         <a href="/" class="text-blue-700 text-xl font-semibold">Homepage</a>
         <a href="/billing" class="text-blue-700 text-xl font-semibold">
