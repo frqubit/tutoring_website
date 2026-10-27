@@ -56,7 +56,9 @@
     let showInvoiceDetails = $state(false);
 </script>
 
-<div class="relative flex flex-row justify-start items-start w-full mt-8">
+<div
+    class="relative flex flex-col md:flex-row justify-start items-start w-full mt-8"
+>
     {#await getBalancePromise}
         <span class="text-7xl font-bold">$...</span>
     {:then balance}
@@ -64,7 +66,9 @@
         >
     {/await}
 
-    <div class="flex flex-col justify-start items-start w-1/2 ml-auto">
+    <div
+        class="contents md:flex flex-col justify-start items-start w-1/2 ml-auto"
+    >
         <span class="text-2xl font-light">
             Next invoice on {get_next_month()} 1st
         </span>
@@ -92,32 +96,64 @@
         {#if showInvoiceDetails}
             <div
                 class="
-                    absolute right-0 top-full w-full h-fit
-                    bg-white border mt-4 px-8
-                    grid grid-cols-4
+                    absolute
+                    -right-6 lg:right-0 top-full
+                    w-[calc(100vw+24px)] lg:w-full h-fit
+                    bg-white lg:border mt-3 lg:mt-4
+                    px-12 lg:px-8
+                    flex flex-col justify-start items-start
+                    lg:grid grid-cols-4
                     invoice-grid
+                    text-2xl
                 "
             >
-                {#each nextInvoice as charge}
+                {#each nextInvoice as charge, i}
                     <!-- <div
                         class="flex flex-row justify-between items-start mx-4 text-2xl w-full"
                     > -->
-                    <span>{charge.name}</span>
-                    <span>{charge.date.toLocaleDateString()}</span>
-                    <span>{charge.student_name}</span>
-                    <span class="block">
-                        {cents_to_dollar_string(charge.cents)}
-                    </span>
-                    <!-- </div> -->
+                    <span class="w-full text-start">{charge.name}</span>
+                    <div
+                        class="flex flex-row justify-start items-center w-full lg:contents"
+                    >
+                        <div
+                            class="flex flex-row-reverse justify-start items-start lg:contents"
+                        >
+                            <span class="text-xl lg:text-2xl text-end"
+                                >{charge.date.toLocaleDateString()}</span
+                            >
+                            {#if charge.student_name != ""}
+                                <span class="mr-1 text-lg lg:hidden">,</span>
+                            {/if}
+                            <span class="text-xl lg:text-2xl text-end"
+                                >{charge.student_name}</span
+                            >
+                        </div>
+                        <span class="ml-auto lg:md-none block">
+                            {cents_to_dollar_string(charge.cents)}
+                        </span>
+                    </div>
+                    <hr
+                        class={`${i == nextInvoice.length - 1 ? "invisible" : ""} w-full border-dashed my-2 lg:hidden`}
+                    />
                 {/each}
 
                 <hr class="w-full col-span-4" />
-                <span class="col-start-3 font-bold">Total</span>
-                <span class="block font-bold">
-                    {cents_to_dollar_string(
-                        nextInvoice.reduce((agg, next) => agg + next.cents, 0),
-                    )}
-                </span>
+                <div
+                    class="
+                        flex flex-row justify-between items-center w-full lg:contents
+                        my-4 lg:m-0
+                    "
+                >
+                    <span class="col-start-3 font-bold text-end">Total</span>
+                    <span class="block font-bold text-end">
+                        {cents_to_dollar_string(
+                            nextInvoice.reduce(
+                                (agg, next) => agg + next.cents,
+                                0,
+                            ),
+                        )}
+                    </span>
+                </div>
             </div>
         {/if}
     {/await}
@@ -129,7 +165,9 @@
 
     {#await pastInvoicesPromise then pastInvoices}
         {#each pastInvoices as invoice}
-            <div class="flex flex-row justify-start items-start text-2xl mt-4">
+            <div
+                class="flex flex-row justify-start items-start text-xl md:text-2xl mt-4"
+            >
                 <span>{invoice.date.toLocaleString()}</span>
                 <span class="ml-auto"
                     >{cents_to_dollar_string(invoice.cents)}</span
@@ -140,11 +178,7 @@
 </div>
 
 <style>
-    .invoice-grid > span {
-        font-size: 1.5rem;
-    }
-
-    .invoice-grid > span:not(:nth-child(4n + 1)) {
+    /*.invoice-grid > span:not(:nth-child(4n + 1)):not {
         text-align: end;
-    }
+    }*/
 </style>
