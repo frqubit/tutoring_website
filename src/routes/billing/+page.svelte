@@ -60,19 +60,20 @@
     class="relative flex flex-col md:flex-row justify-start items-start w-full mt-8"
 >
     {#await getBalancePromise}
-        <span class="text-7xl font-bold">$...</span>
+        <span class="text-6xl sm:text-7xl font-bold">$...</span>
     {:then balance}
-        <span class="text-7xl font-bold">{cents_to_dollar_string(balance)}</span
+        <span class="text-6xl sm:text-7xl font-bold"
+            >{cents_to_dollar_string(balance)}</span
         >
     {/await}
 
     <div
         class="contents md:flex flex-col justify-start items-start w-1/2 ml-auto"
     >
-        <span class="text-2xl font-light">
+        <span class="text-xl sm:text-2xl font-light">
             Next invoice on {get_next_month()} 1st
         </span>
-        <span class="text-2xl font-light">
+        <span class="text-xl sm:text-2xl font-light">
             Estimated:
             {#await nextInvoicePromise}
                 ...
@@ -104,29 +105,29 @@
                     flex flex-col justify-start items-start
                     lg:grid grid-cols-4
                     invoice-grid
-                    text-2xl
+                    text-md sm:text-2xl
                 "
             >
                 {#each nextInvoice as charge, i}
                     <!-- <div
                         class="flex flex-row justify-between items-start mx-4 text-2xl w-full"
                     > -->
-                    <span class="w-full text-start">{charge.name}</span>
+                    <span class="text-xl sm:text-2xl w-full text-start"
+                        >{charge.name}</span
+                    >
                     <div
                         class="flex flex-row justify-start items-center w-full lg:contents"
                     >
                         <div
                             class="flex flex-row-reverse justify-start items-start lg:contents"
                         >
-                            <span class="text-xl lg:text-2xl text-end"
+                            <span class="text-end"
                                 >{charge.date.toLocaleDateString()}</span
                             >
                             {#if charge.student_name != ""}
-                                <span class="mr-1 text-lg lg:hidden">,</span>
+                                <span class="mr-1 text-md lg:hidden">,</span>
                             {/if}
-                            <span class="text-xl lg:text-2xl text-end"
-                                >{charge.student_name}</span
-                            >
+                            <span class="text-end">{charge.student_name}</span>
                         </div>
                         <span class="ml-auto lg:md-none block">
                             {cents_to_dollar_string(charge.cents)}

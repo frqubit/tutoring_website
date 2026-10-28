@@ -54,8 +54,11 @@
     />
     {#await recentSessionsPromise then recentSessions}
         {#each recentSessions as session}
-            <div class="text-2xl text-center mt-2 contents recentSession">
-                <span class="text-left pt-3 md:py-3 text-3xl md:text-2xl"
+            <div
+                class="text-lg sm:text-2xl text-center mt-2 contents recentSession"
+            >
+                <span
+                    class="text-left sm:pt-3 md:py-3 text-xl sm:text-3xl md:text-2xl"
                     >{session.date.toLocaleString()}</span
                 >
                 <div
@@ -63,16 +66,17 @@
                         flex flex-row justify-start items-start md:contents
                         border-b border-dashed md:border-none
                         w-full
+                        mb-2 sm:mb-0
                     "
                 >
-                    <span class="pt-1 mb-3 md:py-3 md:mb-0">
+                    <span class="pt-1 mb-1 sm:mb-3 md:py-3 md:mb-0">
                         {#await userInfoPromise then userInfo}
                             {userInfo.find_student_of_mine(session.students)
                                 ?.name}
                         {/await}
                     </span>
-                    <span class="md:hidden mr-2">,</span>
-                    <span class="pt-1 pb-3 md:py-3">
+                    <span class="text-lg sm:text-2xl md:hidden mr-2">,</span>
+                    <span class="pt-1 pb-1 sm:pb-3 md:py-3">
                         {session.minutes} minutes
                     </span>
                 </div>

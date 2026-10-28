@@ -37,7 +37,7 @@
         <span
             class="
                 font-bold
-                text-2xl lg:text-4xl
+                text-2xl sm:text-4xl
                 self-center lg:self-start
             ">Next Session</span
         >
@@ -63,7 +63,7 @@
                 items-end
                 col-start-2
                 row-start-1 lg:row-start-2
-                text-lg lg:text-2xl
+                text-md lg:text-2xl
             "
         >
             <span class="font-light">

@@ -14,5 +14,5 @@ const MONTHS = [
 ];
 
 export function get_next_month() {
-  return MONTHS[(new Date().getMonth() + 2) % 12];
+  return MONTHS[(new Date().getMonth() + 1) % 12];
 }
