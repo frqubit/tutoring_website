@@ -64,6 +64,10 @@
                 <a href="/billing" class="text-blue-700 text-xl font-semibold">
                     Billing
                 </a>
+
+                <a href="/upcoming" class="text-blue-700 text-xl font-semibold">
+                    Schedule
+                </a>
             {/if}
         {/await}
     </div>

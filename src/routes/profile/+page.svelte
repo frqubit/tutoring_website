@@ -12,8 +12,6 @@
     const userinfoPromise = localUserInfo();
 
     async function get_students(clientid: number | undefined) {
-        console.log(clientid);
-
         if (!clientid) return [];
 
         const fetcher = FetcherWithDefaultClientSettings(StudentFetcher);
