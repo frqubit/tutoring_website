@@ -17,7 +17,7 @@
     });
 </script>
 
-<div class="w-full border-b-2 mb-4 flex flex-row items-center gap-x-5 relative">
+<div class="w-full pl-2 mb-4 flex flex-row items-center gap-x-10 relative">
     <button class="md:hidden" onclick={() => (hamburgered = !hamburgered)}>
         <img src={Hamburger} class="h-full" alt="hamburger" />
     </button>
@@ -31,43 +31,31 @@
             flex flex-col justify-start items-start
             px-2 py-1 md:p-0
             z-10 md:z-0
+            text-lg
+            text-black
         `}
     >
         {#await userInfo}
-            <a href="/" class="text-blue-700 text-xl font-semibold">Homepage</a>
-            <a href="/billing" class="text-blue-700 text-xl font-semibold">
-                Billing
-            </a>
+            <a href="/" class=" font-semibold">Homepage</a>
+            <a href="/billing" class=" font-semibold"> Billing </a>
+            <a href="/upcoming" class=" font-semibold"> Upcoming </a>
         {:then userInfo}
             {#if userInfo.value?.is_administrator && userInfo.value.client == undefined}
-                <a href="/admin" class="text-red-700 text-xl font-semibold">
+                <a href="/admin" class="text-red-700 font-semibold">
                     Homepage
                 </a>
 
-                <a
-                    href="/admin/student"
-                    class="text-blue-700 text-xl font-semibold">Students</a
-                >
-                <a
-                    href="/admin/client"
-                    class="text-blue-700 text-xl font-semibold">Clients</a
-                >
-                <a
-                    href="/admin/calendar"
-                    class="text-blue-700 text-xl font-semibold">Calendar</a
+                <a href="/admin/student" class=" font-semibold">Students</a>
+                <a href="/admin/client" class="font-semibold">Clients</a>
+                <a href="/admin/calendar" class="text-blue-700 font-semibold"
+                    >Calendar</a
                 >
             {:else}
-                <a href="/" class="text-blue-700 text-xl font-semibold">
-                    Homepage
-                </a>
+                <a href="/" class=" font-semibold"> Homepage </a>
 
-                <a href="/billing" class="text-blue-700 text-xl font-semibold">
-                    Billing
-                </a>
+                <a href="/billing" class="font-semibold"> Billing </a>
 
-                <a href="/upcoming" class="text-blue-700 text-xl font-semibold">
-                    Schedule
-                </a>
+                <a href="/upcoming" class="font-semibold"> Upcoming </a>
             {/if}
         {/await}
     </div>

@@ -16,3 +16,7 @@ const MONTHS = [
 export function get_next_month() {
   return MONTHS[(new Date().getMonth() + 1) % 12];
 }
+
+export function month_string_from_getMonth(num: number) {
+  return MONTHS[num];
+}

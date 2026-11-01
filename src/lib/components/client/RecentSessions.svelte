@@ -23,7 +23,7 @@
 
         console.log(sessions);
 
-        return sessions;
+        return sessions.toReversed();
     }
 
     const recentSessionsPromise = get_recent_sessions();

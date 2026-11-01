@@ -38,6 +38,10 @@
     const nextSessionsPromise = getNextSessions();
 </script>
 
+<h1 class="w-full text-center text-5xl font-bold mt-12 mb-16">
+    Upcoming Sessions
+</h1>
+
 {#await nextSessionsPromise then nextSessions}
     {#each Object.entries(nextSessions) as dateSessions}
         <div class="flex flex-col justify-start items-start w-full mt-8">
